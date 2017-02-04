@@ -76,7 +76,7 @@ void XPlayer::Move(float dt)
 		animatedSprite.setFrameTime(sf::seconds(WALKING_SPEED));
 	}
 
-	if (isMoving == false) {
+	if (!isMoving) {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 		{
 			fNextSpot = vPosition.y + TILESIZE;
@@ -120,11 +120,11 @@ void XPlayer::Move(float dt)
 	}
 
 	// Do the actual movement
-	if (isMoving == true)
+	if (isMoving)
 	{
 		switch (nDirection) {
 		case UP: {
-			vPosition.y += float(movespeed * (isRunning ? 2 : 1)) *dt;
+			vPosition.y += movespeed * (isRunning ? 2 : 1) *dt;
 			if (vPosition.y >= fNextSpot) {
 				vPosition.y = fNextSpot;
 				isMoving = false;
@@ -133,7 +133,7 @@ void XPlayer::Move(float dt)
 		}
 			break;
 		case DOWN:
-			vPosition.y -= float(movespeed * (isRunning ? 2 : 1)) *dt;
+			vPosition.y -= movespeed * (isRunning ? 2 : 1) *dt;
 			if (vPosition.y <= fNextSpot) {
 				vPosition.y = fNextSpot;
 				isMoving = false;
@@ -141,7 +141,7 @@ void XPlayer::Move(float dt)
 			}
 			break;
 		case LEFT:
-			vPosition.x += float(movespeed * (isRunning ? 2 : 1)) *dt;
+			vPosition.x += movespeed * (isRunning ? 2 : 1) *dt;
 			if (vPosition.x >= fNextSpot) {
 				vPosition.x = fNextSpot;
 				isMoving = false;
@@ -149,7 +149,7 @@ void XPlayer::Move(float dt)
 			}
 			break;
 		case RIGHT:
-			vPosition.x -= float(movespeed * (isRunning ? 2 : 1)) *dt;
+			vPosition.x -= movespeed * (isRunning ? 2 : 1) *dt;
 			if (vPosition.x <= fNextSpot) {
 				vPosition.x = fNextSpot;
 				isMoving = false;

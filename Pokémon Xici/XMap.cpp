@@ -9,12 +9,12 @@ bool XMap::Init(XEngine& pEngine) {
 }
 
 void XMap::Render(sf::RenderWindow* window, sf::Vector2f position) {
-	DrawGrid(window);
 	for (int i = 0; i < m_vTiles.size(); i++) {
 		auto s = m_vTiles[i];
 		s.sprite.setPosition(s.sprite.getPosition().x  + position.x, s.sprite.getPosition().y  + position.y);
 		window->draw(s.sprite);
 	}
+	DrawGrid(window);
 }
 
 
@@ -49,7 +49,7 @@ void XMap::DrawGrid(sf::RenderWindow* window) {
 
 		window->draw(line, 2, sf::Lines);
 	}
-	for (float x = 0; x < 1000; x += 16) {
+	for (float x = 4; x < 1000; x += 16) {
 		sf::Vertex line[] =
 		{
 			sf::Vertex(sf::Vector2f(0, x)),
