@@ -24,10 +24,7 @@ bool XSprite::LoadTileSet(std::string szFile, int scale, int idx) {
 
 bool XSprite::LoadPokemon() {
 	for (int i = 0; i < NUM_POKEMON; i++) {
-
-		std::string buffer = "";
-		int numZeros = i < 10 ? 2 : (i < 100 ? 1 : 0);
-		buffer = "data/Battlers/" + std::string(numZeros, '0') + std::to_string(i) + ".png";
+		std::string buffer  = "data/Battlers/" + std::string(3 - std::to_string(i).length(), '0') + std::to_string(i) + ".png";
 
 		if (!LoadTexture(buffer, POKEMON_BEGIN + i))
 			throw buffer;
@@ -35,9 +32,7 @@ bool XSprite::LoadPokemon() {
 	}
 
 	for (int i = 0; i < NUM_POKEMON; i++) {
-		std::string buffer = "";
-		int numZeros = i < 10 ? 2 : (i < 100 ? 1 : 0);
-		buffer = "data/Battlers/" + std::string(numZeros, '0') + std::to_string(i) + "b.png";
+		std::string buffer =  "data/Battlers/" + std::string(3 - std::to_string(i).length(), '0') + std::to_string(i) + "b.png";
 
 		if (!LoadTexture(buffer, POKEMON_BACK_BEGIN + i))
 			throw buffer;
@@ -45,9 +40,7 @@ bool XSprite::LoadPokemon() {
 	}
 
 	for (int i = 0; i < NUM_POKEMON; i++) {
-		std::string buffer = "";
-		int numZeros = i < 10 ? 2 : (i < 100 ? 1 : 0);
-		buffer = "data/Battlers/" + std::string(numZeros, '0') + std::to_string(i) + "s.png";
+		std::string buffer = "data/Battlers/" + std::string(3 - std::to_string(i).length(), '0') + std::to_string(i) + "s.png";
 
 		if (!LoadTexture(buffer, POKEMON_SHINY_BEGIN + i))
 			throw buffer;
@@ -55,9 +48,7 @@ bool XSprite::LoadPokemon() {
 	}
 
 	for (int i = 0; i < NUM_POKEMON; i++) {
-		std::string buffer = "";
-		int numZeros = i < 10 ? 2 : (i < 100 ? 1 : 0);
-		buffer = "data/Battlers/" + std::string(numZeros, '0') + std::to_string(i) + "sb.png";
+		std::string buffer = "data/Battlers/" + std::string(3 - std::to_string(i).length(), '0') + std::to_string(i) + "sb.png";
 
 		if (!LoadTexture(buffer, POKEMON_SHINY_BACK_BEGIN + i))
 			throw buffer;

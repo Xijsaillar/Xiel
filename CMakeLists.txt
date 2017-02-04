@@ -22,5 +22,4 @@ set(SOURCE_FILES
     "Pokémon Xici/XPlayer.cpp"
     "Pokémon Xici/XPlayer.h")
 
-
 add_executable(Pokemon_Xici ${SOURCE_FILES})

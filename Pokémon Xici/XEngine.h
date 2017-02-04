@@ -24,6 +24,8 @@ public:
 	bool GetAbsoluteCoordinates(sf::Vector2f);
 	// Constructor
 	XEngine() : m_pSprites() { };
+	// Get Sprite class
+	XSprite* GetXSprite() { return &m_pSprites; }
 private:
 	// Map
 	XMap m_pMap;
