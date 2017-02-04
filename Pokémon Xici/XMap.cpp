@@ -70,7 +70,7 @@ bool XMap::LoadMapFromFile(std::string filename) {
 	// ----------------------------------- > DEBUG ONLY
 	mapHeader.Scale = 16;
 
-	if (!tileset.loadFromFile("data/tileset_emerald.DIB"))
+	if (!tileset.loadFromFile("data/tileset_firered.png"))
 		return false;
 
 	float x = 0, y = 0;
@@ -99,6 +99,8 @@ bool XMap::LoadMapFromFile(std::string filename) {
 			x += mapHeader.Scale;
 		}
 	}
+
+	file.close();
 
 	return true;
 }

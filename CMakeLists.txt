@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.7)
 project(Pokemon_Xici)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -lsfml-graphics -lsfml-window -lsfml-system")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY bin)
 
 set(SOURCE_FILES
     "Pokémon Xici/Texture/AnimatedSprite.cpp"

@@ -4,6 +4,7 @@ bool XEngine::Init() {
 	videoSize = sf::Vector2f(512, 384);
 	window = new sf::RenderWindow(sf::VideoMode((unsigned int) videoSize.x, (unsigned int) videoSize.y),
 								  "Pokemon Xici");
+	window->setFramerateLimit(60);
 
 	if (!m_pFont.loadFromFile("data/test.ttf"))
 		return false;
@@ -14,7 +15,7 @@ bool XEngine::Init() {
 	if (!m_pSprites.LoadPokemon())
 		return false;
 
-	m_pWriter.init("testing...", m_pFont, 16, 0.05);
+	m_pWriter.init("Init...", m_pFont, 16, 0.05);
 	m_pWriter.setPosition(sf::Vector2f(17, 316));
 	
 	if (!window)
@@ -94,7 +95,7 @@ void XEngine::ProcessInput()
 	{
 		if (evt.type == sf::Event::Closed)
 			window->close();
-		if (evt.type == sf::Event::KeyReleased) {
+		if (evt.type == sf::Event::KeyPressed) {
 			if (evt.key.code == sf::Keyboard::C) {
 				if (m_pPlayer.GetScreen() == MENU)
 					m_pPlayer.SetScreen(GAME);
