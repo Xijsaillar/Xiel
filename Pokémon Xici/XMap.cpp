@@ -2,6 +2,9 @@
 #include <fstream>
 #include <math.h>
 
+// TODO
+// Rewrite because working with not-shown tiles is bullshit
+
 bool XMap::Init(XEngine& pEngine) {
 	m_vTiles.clear();
 	return true;
@@ -31,10 +34,8 @@ bool XMap::isCollision(sf::Vector2f pos) {
 	if (pos.x < 0 || pos.y < 0 || pos.x >= mapHeader.Width * 16 || pos.y >= mapHeader.Height * 16)
 		return true;
 	// Get position
-	int test = this->CoordinateToID(mapHeader.Width, (int) pos.x / 16, (int) pos.y / 16);
-	// Safety first
-	return m_vTiles.size() <= test || m_vTiles[test].info.CollissionLayer > 0;
-	// Return real data
+	int nID = this->CoordinateToID(mapHeader.Width, (int) pos.x / 16, (int) pos.y / 16);
+	return m_vTiles.size() <= nID || m_vTiles[nID].info.CollissionLayer > 0;
 }
 
 void XMap::DrawGrid(sf::RenderWindow* window) {
@@ -69,7 +70,7 @@ bool XMap::LoadMapFromFile(std::string filename) {
 	// ----------------------------------- > DEBUG ONLY
 	mapHeader.Scale = 16;
 
-	if (!tileset.loadFromFile("data/tileset.png"))
+	if (!tileset.loadFromFile("data/tileset_emerald.DIB"))
 		return false;
 
 	float x = 0, y = 0;
