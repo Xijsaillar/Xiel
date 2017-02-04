@@ -47,7 +47,7 @@ void XMap::DrawGrid(sf::RenderWindow* window) {
 
 		window->draw(line, 2, sf::Lines);
 	}
-	for (float x = 4; x < 1000; x += 16) {
+	for (float x = 0; x < 1000; x += 16) {
 		sf::Vertex line[] =
 		{
 			sf::Vertex(sf::Vector2f(0, x)),
