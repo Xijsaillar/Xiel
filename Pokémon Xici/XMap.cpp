@@ -67,8 +67,6 @@ bool XMap::LoadMapFromFile(std::string filename) {
 
 	// Read file header
 	file.read((char*)&mapHeader, sizeof(MAPHEADER));
-	// ----------------------------------- > DEBUG ONLY
-	mapHeader.Scale = 16;
 
 	if (!tileset.loadFromFile("data/tileset_firered.png"))
 		return false;

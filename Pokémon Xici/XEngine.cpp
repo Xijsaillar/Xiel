@@ -34,38 +34,13 @@ bool XEngine::Init() {
 	m_pPlayer.Init(sf::Vector2f(videoSize.x / 2, videoSize.y / 2));
 	m_pPlayer.Step(sf::Vector2i(-5, 0));
 
+	PushState(std::make_unique<XPlayer>(m_pPlayer));
+
 	return true;
 }
 
 bool XEngine::GetAbsoluteCoordinates(sf::Vector2f vector) {
 	return m_pMap.isCollision(vector);
-}
-
-void XEngine::RenderFrame() {
-	// Clear the window so we can draw on a blank screen
-	window->clear();
-
-	// Do all the rendering
-	if (m_pPlayer.GetScreen() == GAME) {
-		window->setView(m_pView);
-		m_pMap.Render(window, m_pPlayer.GetPosition());
-		m_pPlayer.Render(window, deltaTime);
-	}
-	
-	if (m_pPlayer.GetScreen() == MENU) {
-		window->setView(window->getDefaultView());
-		window->draw(*m_pSprites.GetSprite(MENU_FRAME));
-		m_pWriter.setString("You've been to the wrong gitbourhood, motherfucker!");
-		m_pWriter.write();
-		m_pWriter.draw(*window, sf::RenderStates::Default);
-	}
-
-	if (m_pPlayer.GetScreen() == BATTLE) {
-		window->setView(m_pBattleView);
-		m_pBattle.Render(window);
-	}
-	// Display final results
-	window->display();
 }
 
 void XEngine::Go()
@@ -81,20 +56,25 @@ void XEngine::MainLoop()
 	//Loop until our window is closed
 	while (window->isOpen())
 	{
-		ProcessInput();
-		RenderFrame();
-		// Reset Clock
+		window->clear(sf::Color::Black);
+		m_sStack.top()->Input(deltaTime);
+		m_sStack.top()->Render(window, deltaTime);
+		m_sStack.top()->Update(deltaTime);
+
+		WindowEvents();
 		deltaTime = m_pClock.restart().asSeconds();
+		window->display();
 	}
 }
 
-void XEngine::ProcessInput()
+void XEngine::WindowEvents()
 {
 	sf::Event evt;
 	while (window->pollEvent(evt))
 	{
 		if (evt.type == sf::Event::Closed)
 			window->close();
+
 		if (evt.type == sf::Event::KeyPressed) {
 			if (evt.key.code == sf::Keyboard::C) {
 				if (m_pPlayer.GetScreen() == MENU)
@@ -105,7 +85,5 @@ void XEngine::ProcessInput()
 		}
 	}
 
-	if(m_pPlayer.GetScreen() == GAME)
-		m_pPlayer.Move(deltaTime);
 
 }

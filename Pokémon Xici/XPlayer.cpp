@@ -11,6 +11,7 @@ const float movespeed = 40;
 // Qualifier:
 // Parameter: sf::Vector2f pos
 //************************************
+//
 void XPlayer::Init(sf::Vector2f pos) {
 	if (!texture.loadFromFile("data/player_male.png"))
 	{
@@ -48,21 +49,24 @@ void XPlayer::Init(sf::Vector2f pos) {
 // Parameter: sf::RenderWindow * window
 // Parameter: float dt
 //************************************
-void XPlayer::Render(sf::RenderWindow* window, float dt) {
-	window->draw(animatedSprite);
+void XPlayer::Render(sf::RenderWindow *renderWindow, float deltaTime) {
+
+	XEngine::GetInstance().GetXMap()->Render(renderWindow, vPosition);
+
+	renderWindow->draw(animatedSprite);
 	animatedSprite.play(*currentAnimation);
-	animatedSprite.update(sf::seconds(dt));
+	animatedSprite.update(sf::seconds(deltaTime));
 }
 
 //************************************
 // Method:    Move
-// FullName:  XPlayer::Move
+// FullName:  XPlayer::Input
 // Access:    public 
 // Returns:   void
 // Qualifier:
 // Parameter: float dt
 //************************************
-void XPlayer::Move(float dt)
+void XPlayer::Input(float deltaTime)
 {
 	// Check for all the buttons pressed
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::B)) {
@@ -122,7 +126,7 @@ void XPlayer::Move(float dt)
 	{
 		switch (nDirection) {
 		case UP: {
-			vPosition.y += movespeed * (isRunning ? 2 : 1) *dt;
+			vPosition.y += movespeed * (isRunning ? 2 : 1) * deltaTime;
 			if (vPosition.y >= fNextSpot) {
 				vPosition.y = fNextSpot;
 				isMoving = false;
@@ -131,7 +135,7 @@ void XPlayer::Move(float dt)
 		}
 			break;
 		case DOWN:
-			vPosition.y -= movespeed * (isRunning ? 2 : 1) *dt;
+			vPosition.y -= movespeed * (isRunning ? 2 : 1) * deltaTime;
 			if (vPosition.y <= fNextSpot) {
 				vPosition.y = fNextSpot;
 				isMoving = false;
@@ -139,7 +143,7 @@ void XPlayer::Move(float dt)
 			}
 			break;
 		case LEFT:
-			vPosition.x += movespeed * (isRunning ? 2 : 1) *dt;
+			vPosition.x += movespeed * (isRunning ? 2 : 1) * deltaTime;
 			if (vPosition.x >= fNextSpot) {
 				vPosition.x = fNextSpot;
 				isMoving = false;
@@ -147,7 +151,7 @@ void XPlayer::Move(float dt)
 			}
 			break;
 		case RIGHT:
-			vPosition.x -= movespeed * (isRunning ? 2 : 1) *dt;
+			vPosition.x -= movespeed * (isRunning ? 2 : 1) * deltaTime;
 			if (vPosition.x <= fNextSpot) {
 				vPosition.x = fNextSpot;
 				isMoving = false;
@@ -163,4 +167,8 @@ void XPlayer::Move(float dt)
 		currentAnimation = &walkingAnimation[nDirection];
 		animatedSprite.stop();
 	}
+}
+
+void XPlayer::Update(float deltaTime) {
+
 }

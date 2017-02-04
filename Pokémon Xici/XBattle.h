@@ -8,4 +8,7 @@ public:
 	~XBattle();
 	bool Init();
 	void Render(sf::RenderWindow*);
+
+	void InitBattle();
+
 };

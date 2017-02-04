@@ -3,11 +3,18 @@
 #define _XENGINE_H_
 
 #include <SFML/Graphics.hpp>
+
+#include <stack>
+#include <memory>
+
 #include "XMap.h"
 #include "XPlayer.h"
 #include "XBattle.h"
 #include "Texture/XSprite.h"
+#include "Interfaces/States.h"
 #include "TypeWriter.h"
+
+using namespace Interfaces;
 
 class XEngine
 {
@@ -19,6 +26,11 @@ public:
 		return instance;
 	}
 
+	// De-constructor
+	XEngine(XEngine const &) = delete;
+
+	void operator=(XEngine const &) = delete;
+
 
 	void Go();					//Starts the engine
 	bool GetAbsoluteCoordinates(sf::Vector2f);
@@ -26,6 +38,14 @@ public:
 	XEngine() : m_pSprites() { };
 	// Get Sprite class
 	XSprite* GetXSprite() { return &m_pSprites; }
+
+	XMap *GetXMap() { return &m_pMap; }
+
+	// Stuff used for states
+	void PushState(std::unique_ptr<Interfaces::States> pState) { m_sStack.push(std::move(pState)); }
+
+	void PopState() { m_sStack.pop(); }
+
 private:
 	// Map
 	XMap m_pMap;
@@ -37,39 +57,25 @@ private:
 	//Render Window (and Camera) size
 	sf::Vector2f videoSize;
 
+	// Stuff used for states
+	std::stack<std::unique_ptr<Interfaces::States>> m_sStack;
+
 	//Initializes the engine
 	bool Init();
 	//Main Game Loop
 	void MainLoop();
-	//Renders one frame
-	void RenderFrame();
 	//Processes user input
-	void ProcessInput();
-	//Updates all Engine internals
-	void Update();
-private:
+	void WindowEvents();
+
+	// Everything necessary for the typewriter
 	sf::Font m_pFont;
 	Typewriter m_pWriter;
 	sf::Clock m_pClock;
 	float deltaTime;
 
+	// semi-static members
 	XPlayer m_pPlayer;
 	XSprite m_pSprites;
 	XBattle m_pBattle;
-
-
-							  // C++ 11
-							  // =======
-							  // We can use the better technique of deleting the methods
-							  // we don't want.
-public:
-	XEngine(XEngine const&) = delete;
-	void operator=(XEngine const&) = delete;
-
-	// Note: Scott Meyers mentions in his Effective Modern
-	//       C++ book, that deleted functions should generally
-	//       be public as it results in better error messages
-	//       due to the compilers behavior to check accessibility
-	//       before deleted status
 };
 #endif
