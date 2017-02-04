@@ -48,7 +48,7 @@ void XMap::DrawGrid(sf::RenderWindow* window) {
 
 		window->draw(line, 2, sf::Lines);
 	}
-	for (float x = 0; x < 1000; x += 16) {
+	for (float x = 4; x < 1000; x += 16) {
 		sf::Vertex line[] =
 		{
 			sf::Vertex(sf::Vector2f(0, x)),
@@ -80,7 +80,7 @@ bool XMap::LoadMapFromFile(std::string filename) {
 		MapTile t;
 
 		file.read((char*)&tile, sizeof(TILE));
-		auto vector = CoordinateFromID(tileset.getSize().x / mapHeader.Scale, tileset.getSize().y / mapHeader.Scale, tile.tileID);
+		auto vector = CoordinateFromID(tileset.getSize().x / mapHeader.Scale, tile.tileID);
 
 		tilesprite.setTexture(tileset);
 		tilesprite.setTextureRect(sf::IntRect(vector.x * mapHeader.Scale, vector.y * mapHeader.Scale, mapHeader.Scale, mapHeader.Scale));
@@ -119,7 +119,7 @@ int XMap::CoordinateToID(int width, int x, int y)
 // Parameter: int height
 // Parameter: int index
 //************************************
-sf::Vector2i XMap::CoordinateFromID(int width, int height, int index)
+sf::Vector2i XMap::CoordinateFromID(int width, int index)
 {
 	sf::Vector2i p;
 	float n = float(index / width);

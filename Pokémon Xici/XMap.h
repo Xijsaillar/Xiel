@@ -41,7 +41,8 @@ public:
 	bool isCollision(sf::Vector2f);
 private:
 	int CoordinateToID(int width, int x, int y);
-	sf::Vector2i CoordinateFromID(int width, int height, int index);
+
+	sf::Vector2i CoordinateFromID(int width, int index);
 	// Debug Only
 	void DrawGrid(sf::RenderWindow*);
 	// Texture & sprites

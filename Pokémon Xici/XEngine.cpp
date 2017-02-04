@@ -9,7 +9,7 @@ bool XEngine::Init() {
 	if (!m_pFont.loadFromFile("data/test.ttf"))
 		return false;
 
-	if (!m_pBattle.Init())
+	if (!m_pBattle.Init(window->getDefaultView()))
 		return false;
 
 	if (!m_pSprites.LoadPokemon())
@@ -21,18 +21,13 @@ bool XEngine::Init() {
 	if (!window)
 		return false;
 
-	// Setup the view we're using
-	m_pView = m_pBattleView = window->getDefaultView();
-	m_pView.zoom(0.5);
-	window->setView(m_pView);
-
 	m_pSprites.LoadTexture("data/textskin.png", MENU_FRAME);
 
 	// Init the other classes
 	m_pMap.Init(*this);
 	m_pMap.LoadMapFromFile("data/xiel_test.prmp");
-	m_pPlayer.Init(sf::Vector2f(videoSize.x / 2, videoSize.y / 2));
-	m_pPlayer.Step(sf::Vector2i(-5, 0));
+	m_pPlayer.Init(sf::Vector2f(videoSize.x / 2, videoSize.y / 2), window->getDefaultView());
+	m_pPlayer.Step(sf::Vector2i(-4, 0));
 
 	PushState(std::make_unique<XPlayer>(m_pPlayer));
 
@@ -77,10 +72,10 @@ void XEngine::WindowEvents()
 
 		if (evt.type == sf::Event::KeyPressed) {
 			if (evt.key.code == sf::Keyboard::C) {
-				if (m_pPlayer.GetScreen() == MENU)
-					m_pPlayer.SetScreen(GAME);
-				else
-					m_pPlayer.SetScreen(MENU);
+				PushState(std::make_unique<XBattle>(m_pBattle));
+			}
+			if (evt.key.code == sf::Keyboard::W) {
+				PopState();
 			}
 		}
 	}

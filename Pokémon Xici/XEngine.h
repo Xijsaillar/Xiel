@@ -47,11 +47,6 @@ public:
 	void PopState() { m_sStack.pop(); }
 
 private:
-	// Map
-	XMap m_pMap;
-	// Views
-	sf::View m_pView, m_pBattleView;
-
 	//SFML Render Window
 	sf::RenderWindow* window;
 	//Render Window (and Camera) size
@@ -77,5 +72,6 @@ private:
 	XPlayer m_pPlayer;
 	XSprite m_pSprites;
 	XBattle m_pBattle;
+	XMap m_pMap;
 };
 #endif

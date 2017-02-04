@@ -12,7 +12,9 @@ const float movespeed = 40;
 // Parameter: sf::Vector2f pos
 //************************************
 //
-void XPlayer::Init(sf::Vector2f pos) {
+void XPlayer::Init(sf::Vector2f pos, sf::View pView) {
+	m_pPlayerView = pView;
+	m_pPlayerView.zoom(0.5);
 	if (!texture.loadFromFile("data/player_male.png"))
 	{
 		throw "Could not load player sprite!";
@@ -51,6 +53,7 @@ void XPlayer::Init(sf::Vector2f pos) {
 //************************************
 void XPlayer::Render(sf::RenderWindow *renderWindow, float deltaTime) {
 
+	renderWindow->setView(m_pPlayerView);
 	XEngine::GetInstance().GetXMap()->Render(renderWindow, vPosition);
 
 	renderWindow->draw(animatedSprite);
