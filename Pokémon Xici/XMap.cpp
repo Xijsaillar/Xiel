@@ -3,7 +3,6 @@
 #include <math.h>
 
 bool XMap::Init(XEngine& pEngine) {
-	this->m_pEngine = &pEngine;
 	m_vTiles.clear();
 	return true;
 }
@@ -31,12 +30,10 @@ bool XMap::isCollision(sf::Vector2f pos) {
 	if (pos.x < 0 || pos.y < 0 || pos.x >= mapHeader.Width * 16 || pos.y >= mapHeader.Height * 16)
 		return true;
 	// Get position
-	int test = this->CoordinateToID(10, 10, (int)pos.x/16, (int)pos.y/16);
+	int test = this->CoordinateToID(10, (int) pos.x / 16, (int) pos.y / 16);
 	// Safety first
-	if (m_vTiles.size() <= test)
-		return true;
+	return m_vTiles.size() <= test || m_vTiles[test].info.CollissionLayer == 1;
 	// Return real data
-	return m_vTiles[test].info.CollissionLayer == 1;
 }
 
 void XMap::DrawGrid(sf::RenderWindow* window) {
@@ -104,7 +101,7 @@ bool XMap::LoadMapFromFile(std::string filename) {
 	return true;
 }
 
-int XMap::CoordinateToID(int width, int height, int x, int y)
+int XMap::CoordinateToID(int width, int x, int y)
 {
 	return y * width + x;
 }

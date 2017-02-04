@@ -1,5 +1,4 @@
 #include "XPlayer.h"
-#include <iostream>
 #include "XEngine.h"
 
 #define TILESIZE 16

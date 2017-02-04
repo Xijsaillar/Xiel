@@ -62,7 +62,7 @@ bool XSprite::LoadTexture(std::string szFile, int idx) {
 	if (!texture.loadFromFile(szFile))
 		return false;
 
-	m_pTextures[(int)idx] = texture;
+	m_pTextures[idx] = texture;
 
 	sf::Sprite sprite;
 	sprite.setTexture(m_pTextures[idx]);

@@ -2,7 +2,8 @@
 
 bool XEngine::Init() {
 	videoSize = sf::Vector2f(512, 384);
-	window = new sf::RenderWindow(sf::VideoMode((int)videoSize.x, (int)videoSize.y), "Pokemon Xici");
+	window = new sf::RenderWindow(sf::VideoMode((unsigned int) videoSize.x, (unsigned int) videoSize.y),
+								  "Pokemon Xici");
 
 	if (!m_pFont.loadFromFile("data/test.ttf"))
 		return false;
@@ -92,8 +93,12 @@ void XEngine::ProcessInput()
 			window->close();
 	}
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::C))
-		m_pPlayer.SetScreen(BATTLE);
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::C)) {
+		if (m_pPlayer.GetScreen() == BATTLE)
+			m_pPlayer.SetScreen(GAME);
+		else
+			m_pPlayer.SetScreen(BATTLE);
+	}
 
 	if(m_pPlayer.GetScreen() == GAME)
 		m_pPlayer.Move(deltaTime);

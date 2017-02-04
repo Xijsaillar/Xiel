@@ -40,7 +40,7 @@ public:
 	void Render(sf::RenderWindow* window, sf::Vector2f position);
 	bool isCollision(sf::Vector2f);
 private:
-	int CoordinateToID(int width, int height, int x, int y);
+	int CoordinateToID(int width, int x, int y);
 	sf::Vector2i CoordinateFromID(int width, int height, int index);
 	// Debug Only
 	void DrawGrid(sf::RenderWindow*);
@@ -49,7 +49,5 @@ private:
 	sf::Sprite sprite;
 	MAPHEADER mapHeader;
 	std::vector<MapTile> m_vTiles;
-	// Pointer to our Engine
-	XEngine* m_pEngine;
 };
 #endif // _XMAP_H_
