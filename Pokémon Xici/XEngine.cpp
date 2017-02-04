@@ -14,6 +14,7 @@ bool XEngine::Init() {
 	if (!m_pSprites.LoadPokemon())
 		return false;
 
+	m_pWriter.init("testing...", m_pFont, 16, 0.05);
 	m_pWriter.setPosition(sf::Vector2f(17, 316));
 	
 	if (!window)
@@ -53,6 +54,7 @@ void XEngine::RenderFrame() {
 	if (m_pPlayer.GetScreen() == MENU) {
 		window->setView(window->getDefaultView());
 		window->draw(*m_pSprites.GetSprite(MENU_FRAME));
+		m_pWriter.setString("You've been to the wrong gitbourhood, motherfucker!");
 		m_pWriter.write();
 		m_pWriter.draw(*window, sf::RenderStates::Default);
 	}
@@ -92,13 +94,14 @@ void XEngine::ProcessInput()
 	{
 		if (evt.type == sf::Event::Closed)
 			window->close();
-	}
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::C)) {
-		if (m_pPlayer.GetScreen() == BATTLE)
-			m_pPlayer.SetScreen(GAME);
-		else
-			m_pPlayer.SetScreen(BATTLE);
+		if (evt.type == sf::Event::KeyReleased) {
+			if (evt.key.code == sf::Keyboard::C) {
+				if (m_pPlayer.GetScreen() == MENU)
+					m_pPlayer.SetScreen(GAME);
+				else
+					m_pPlayer.SetScreen(MENU);
+			}
+		}
 	}
 
 	if(m_pPlayer.GetScreen() == GAME)
