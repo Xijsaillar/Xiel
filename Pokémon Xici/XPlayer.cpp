@@ -1,7 +1,6 @@
 #include "XPlayer.h"
 #include "XEngine.h"
 
-#define TILESIZE 16
 const float movespeed = 40;
 
 //************************************

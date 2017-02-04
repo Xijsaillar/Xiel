@@ -7,6 +7,7 @@
 
 #define WALKING_SPEED 0.25f
 #define RUNNING_SPEED 0.2f
+#define TILESIZE 16
 
 enum ENUM_DIRECTION { UP, DOWN, LEFT, RIGHT };
 enum ENUM_SCREEN { GAME, MENU, BATTLE };
@@ -20,6 +21,11 @@ public:
 	~XPlayer() { };
 	void Move(float dt);
 	void Init(sf::Vector2f);
+
+	void Step(sf::Vector2i pos) {
+		vPosition.x += (pos.x * TILESIZE);
+		vPosition.y = (pos.y * TILESIZE);
+	}
 	void Render(sf::RenderWindow*, float);
 	sf::Vector2f GetPosition() const { return vPosition; }
 	sf::Vector2f GetAbsolutePosition() const { return sf::Vector2f(vStartPos.x - vPosition.x, (vStartPos.y - vPosition.y)); }

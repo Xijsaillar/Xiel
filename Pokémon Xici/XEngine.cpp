@@ -28,8 +28,9 @@ bool XEngine::Init() {
 
 	// Init the other classes
 	m_pMap.Init(*this);
-	m_pMap.LoadMapFromFile("data/whee.prmp");
+	m_pMap.LoadMapFromFile("data/xiel_test.prmp");
 	m_pPlayer.Init(sf::Vector2f(videoSize.x / 2, videoSize.y / 2));
+	m_pPlayer.Step(sf::Vector2i(-5, 0));
 
 	return true;
 }

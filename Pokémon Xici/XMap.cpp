@@ -12,6 +12,7 @@ void XMap::Render(sf::RenderWindow* window, sf::Vector2f position) {
 		auto s = m_vTiles[i];
 		s.sprite.setPosition(s.sprite.getPosition().x  + position.x, s.sprite.getPosition().y  + position.y);
 		window->draw(s.sprite);
+
 	}
 	DrawGrid(window);
 }
@@ -30,9 +31,9 @@ bool XMap::isCollision(sf::Vector2f pos) {
 	if (pos.x < 0 || pos.y < 0 || pos.x >= mapHeader.Width * 16 || pos.y >= mapHeader.Height * 16)
 		return true;
 	// Get position
-	int test = this->CoordinateToID(10, (int) pos.x / 16, (int) pos.y / 16);
+	int test = this->CoordinateToID(mapHeader.Width, (int) pos.x / 16, (int) pos.y / 16);
 	// Safety first
-	return m_vTiles.size() <= test || m_vTiles[test].info.CollissionLayer == 1;
+	return m_vTiles.size() <= test || m_vTiles[test].info.CollissionLayer > 0;
 	// Return real data
 }
 
