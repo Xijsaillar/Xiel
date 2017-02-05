@@ -1,4 +1,5 @@
 #include "XEngine.h"
+#include "Objects/Pokemon.h"
 
 bool XEngine::Init() {
 	videoSize = sf::Vector2f(512, 384);
@@ -72,6 +73,9 @@ void XEngine::WindowEvents()
 
 		if (evt.type == sf::Event::KeyPressed) {
 			if (evt.key.code == sf::Keyboard::C) {
+				Objects::Pokemon player(95, POKEMON_BACK_BEGIN);
+				Objects::Pokemon enemy(67, POKEMON_SHINY_BEGIN);
+				m_pBattle.InitBattle(player, enemy);
 				PushState(std::make_unique<XBattle>(m_pBattle));
 			}
 			if (evt.key.code == sf::Keyboard::W) {

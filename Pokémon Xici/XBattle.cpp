@@ -1,14 +1,12 @@
 #include "XBattle.h"
-#include "Texture/XSprite.h"
 #include "XEngine.h"
-
-XBattle::XBattle()
-{
-}
-
 
 XBattle::~XBattle()
 {
+}
+
+sf::Sprite *XBattle::GetSprite(int id) {
+	return XEngine::GetInstance().GetXSprite()->GetSprite(id);
 }
 
 bool XBattle::Init(sf::View pView) {
@@ -23,16 +21,36 @@ bool XBattle::Init(sf::View pView) {
 	return true;
 }
 
-void XBattle::Render(sf::RenderWindow *renderWindow, float deltaTime) {
-	renderWindow->setView(m_pBattleView);
-	renderWindow->draw(*XEngine::GetInstance().GetXSprite()->GetSprite(BATTLE_FRAME + BATTLE_BACK_STANDARD));
-	renderWindow->draw(*XEngine::GetInstance().GetXSprite()->GetSprite(BATTLE_FRAME + BATTLE_MENU_BIG));
-	renderWindow->draw(*XEngine::GetInstance().GetXSprite()->GetSprite(BATTLE_FRAME + BATTLE_MENU_SMALL));
+void XBattle::InitBattle(Objects::Pokemon player, Objects::Pokemon enemy) {
+	m_pPlayer = player;
+	m_pEnemy = enemy;
 
-	renderWindow->draw(*XEngine::GetInstance().GetXSprite()->GetSprite(POKEMON_SHINY_BEGIN + 38));
-	renderWindow->draw(*XEngine::GetInstance().GetXSprite()->GetSprite(POKEMON_SHINY_BACK_BEGIN + 38));
+	m_pEnemy.GetSprite()->move(250, 0);
+	m_pPlayer.GetSprite()->move(-250, 0);
+	bIsInit = true;
 }
 
-void XBattle::Update(float deltaTime) {}
+void XBattle::Render(sf::RenderWindow *renderWindow, float deltaTime) {
+	renderWindow->setView(m_pBattleView);
+	renderWindow->draw(*GetSprite(BATTLE_FRAME + BATTLE_BACK_STANDARD));
+	renderWindow->draw(*GetSprite(BATTLE_FRAME + BATTLE_MENU_BIG));
+	renderWindow->draw(*GetSprite(BATTLE_FRAME + BATTLE_MENU_SMALL));
+
+	renderWindow->draw(*m_pPlayer.GetSprite());
+	renderWindow->draw(*m_pEnemy.GetSprite());
+}
+
+void XBattle::Update(float deltaTime) {
+	if (bIsInit) {
+		m_pPlayer.GetSprite()->move(200 * deltaTime, 0);
+		m_pEnemy.GetSprite()->move(-200 * deltaTime, 0);
+
+		if (m_pEnemy.GetSprite()->getPosition().x <= 300) {
+			m_pEnemy.GetSprite()->setPosition(300, 0);
+			m_pPlayer.GetSprite()->setPosition(72, 128);
+			bIsInit = false;
+		}
+	}
+}
 
 void XBattle::Input(float deltaTime) {}
