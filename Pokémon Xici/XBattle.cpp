@@ -33,6 +33,6 @@ void XBattle::Render(sf::RenderWindow *renderWindow, float deltaTime) {
 	renderWindow->draw(*XEngine::GetInstance().GetXSprite()->GetSprite(POKEMON_SHINY_BACK_BEGIN + 38));
 }
 
-void XBattle::Update(float) { }
+void XBattle::Update(float deltaTime) {}
 
-void XBattle::Input(float) { }
+void XBattle::Input(float deltaTime) {}
