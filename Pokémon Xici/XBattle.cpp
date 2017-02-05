@@ -38,19 +38,34 @@ void XBattle::Render(sf::RenderWindow *renderWindow, float deltaTime) {
 
 	renderWindow->draw(*m_pPlayer.GetSprite());
 	renderWindow->draw(*m_pEnemy.GetSprite());
+
+	if (bIsText) {
+		XEngine::GetInstance().GetTypewriter()->write();
+		XEngine::GetInstance().GetTypewriter()->draw(*renderWindow, sf::RenderStates::Default);
+	}
 }
 
 void XBattle::Update(float deltaTime) {
 	if (bIsInit) {
-		m_pPlayer.GetSprite()->move(200 * deltaTime, 0);
-		m_pEnemy.GetSprite()->move(-200 * deltaTime, 0);
+		m_pPlayer.GetSprite()->move(175 * deltaTime, 0);
+		m_pEnemy.GetSprite()->move(-175 * deltaTime, 0);
 
 		if (m_pEnemy.GetSprite()->getPosition().x <= 300) {
 			m_pEnemy.GetSprite()->setPosition(300, 0);
 			m_pPlayer.GetSprite()->setPosition(72, 128);
 			bIsInit = false;
+			SetContactText("A wild Xiel appeared!");
 		}
 	}
 }
 
 void XBattle::Input(float deltaTime) {}
+
+void XBattle::SetContactText(std::string szText) {
+	XEngine::GetInstance().GetTypewriter()->reset();
+
+	XEngine::GetInstance().GetTypewriter()->setCharSize(19);
+	XEngine::GetInstance().GetTypewriter()->setPosition(sf::Vector2f(21, 305));
+	XEngine::GetInstance().GetTypewriter()->setString(szText);
+	bIsText = true;
+}

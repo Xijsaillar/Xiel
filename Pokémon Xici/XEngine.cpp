@@ -1,5 +1,6 @@
 #include "XEngine.h"
 #include "Objects/Pokemon.h"
+#include <random>
 
 bool XEngine::Init() {
 	videoSize = sf::Vector2f(512, 384);
@@ -7,7 +8,7 @@ bool XEngine::Init() {
 								  "Pokemon Xici");
 	window->setFramerateLimit(60);
 
-	if (!m_pFont.loadFromFile("data/test.ttf"))
+	if (!m_pFont.loadFromFile("data/pkmnfl.ttf"))
 		return false;
 
 	if (!m_pBattle.Init(window->getDefaultView()))
@@ -16,7 +17,7 @@ bool XEngine::Init() {
 	if (!m_pSprites.LoadPokemon())
 		return false;
 
-	m_pWriter.init("Init...", m_pFont, 16, 0.05);
+	m_pWriter.init("Init...", m_pFont, 16, 0.025);
 	m_pWriter.setPosition(sf::Vector2f(17, 316));
 	
 	if (!window)
@@ -31,6 +32,7 @@ bool XEngine::Init() {
 	m_pPlayer.Step(sf::Vector2i(-4, 0));
 
 	PushState(std::make_unique<XPlayer>(m_pPlayer));
+	srand(time(NULL));
 
 	return true;
 }
@@ -73,8 +75,8 @@ void XEngine::WindowEvents()
 
 		if (evt.type == sf::Event::KeyPressed) {
 			if (evt.key.code == sf::Keyboard::C) {
-				Objects::Pokemon player(95, POKEMON_BACK_BEGIN);
-				Objects::Pokemon enemy(67, POKEMON_SHINY_BEGIN);
+				Objects::Pokemon player(rand() % 151 + 1, POKEMON_BACK_BEGIN);
+				Objects::Pokemon enemy(rand() % 151 + 1, POKEMON_SHINY_BEGIN);
 				m_pBattle.InitBattle(player, enemy);
 				PushState(std::make_unique<XBattle>(m_pBattle));
 			}

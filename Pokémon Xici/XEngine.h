@@ -41,6 +41,8 @@ public:
 
 	XMap *GetXMap() { return &m_pMap; }
 
+	Typewriter *GetTypewriter() { return &m_pWriter; }
+
 	// Stuff used for states
 	void PushState(std::unique_ptr<Interfaces::States> pState) { m_sStack.push(std::move(pState)); }
 

@@ -7,6 +7,7 @@
 #include <iostream>
 #include <string>
 #include <memory>
+#include <SFML/Graphics/Color.hpp>
 
 namespace sf
 {
@@ -28,6 +29,11 @@ public:
 	void reset();
 
 	void setString(std::string s);
+
+	void setCharSize(sf::Uint32 size);
+
+	void setColor(sf::Color color);
+
 	std::string const getString() const;
 
 	void setPosition(sf::Vector2f position);

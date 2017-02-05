@@ -50,6 +50,14 @@ Typewriter::~Typewriter()
 
 }
 
+void Typewriter::setCharSize(sf::Uint32 size) {
+	m_impl->m_text.setCharacterSize(size);
+}
+
+void Typewriter::setColor(sf::Color color) {
+	m_impl->m_text.setColor(color);
+}
+
 void Typewriter::setString(std::string s)
 {
 	m_impl->m_string = s;
@@ -69,6 +77,7 @@ void Typewriter::reset()
 {
 	m_impl->m_timer.restart();
 	m_impl->m_itr = 0;
+	m_impl->m_text.setString("");
 };
 
 void Typewriter::write()

@@ -2,7 +2,8 @@
 #include <SFML/Graphics.hpp>
 #include "Interfaces/States.h"
 #include "Objects/Pokemon.h"
-#include <iostream>
+
+class Typewriter;
 
 class XBattle : public Interfaces::States
 {
@@ -20,11 +21,13 @@ public:
 
 	void InitBattle(Objects::Pokemon player, Objects::Pokemon enemy);
 
+	void SetContactText(std::string);
+
 private:
 	sf::View m_pBattleView;
 	bool bIsInit;
+	bool bIsText;
 
 	Objects::Pokemon m_pPlayer, m_pEnemy;
-
 	sf::Sprite *GetSprite(int id);
 };
