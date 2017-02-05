@@ -65,6 +65,21 @@ void XEngine::MainLoop()
 	}
 }
 
+int XEngine::rdmtest(int i) {
+	switch (i) {
+		case 0:
+			return POKEMON_BEGIN;
+		case 1:
+			return POKEMON_SHINY_BEGIN;
+		case 2:
+			return POKEMON_BACK_BEGIN;
+		case 3:
+			return POKEMON_SHINY_BACK_BEGIN;
+		default:
+			return POKEMON_BACK_BEGIN;
+	}
+}
+
 void XEngine::WindowEvents()
 {
 	sf::Event evt;
@@ -75,8 +90,8 @@ void XEngine::WindowEvents()
 
 		if (evt.type == sf::Event::KeyPressed) {
 			if (evt.key.code == sf::Keyboard::C) {
-				Objects::Pokemon player(rand() % 151 + 1, POKEMON_BACK_BEGIN);
-				Objects::Pokemon enemy(rand() % 151 + 1, POKEMON_SHINY_BEGIN);
+				Objects::Pokemon player(rand() % 151 + 1, rdmtest(rand() % 2 + 2));
+				Objects::Pokemon enemy(rand() % 151 + 1, rdmtest(rand() % 2));
 				m_pBattle.InitBattle(player, enemy);
 				PushState(std::make_unique<XBattle>(m_pBattle));
 			}

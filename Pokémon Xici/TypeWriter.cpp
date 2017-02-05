@@ -25,6 +25,8 @@ void Typewriter::impl::_init(std::string s, sf::Font& f, sf::Uint32 charSize, fl
 	m_text.setFont(f);
 	m_text.setCharacterSize(charSize);
 	m_text.setColor(sf::Color::Black);
+	m_text.setOutlineColor(sf::Color(104, 88, 112));
+	m_text.setOutlineThickness(1);
 	m_string = s;
 	m_offset = timeOffset;
 	m_itr = 0;

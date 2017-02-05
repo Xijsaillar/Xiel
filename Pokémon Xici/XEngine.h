@@ -34,6 +34,8 @@ public:
 
 	void Go();					//Starts the engine
 	bool GetAbsoluteCoordinates(sf::Vector2f);
+
+	int rdmtest(int);
 	// Constructor
 	XEngine() : m_pSprites() { };
 	// Get Sprite class
