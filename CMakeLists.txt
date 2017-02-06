@@ -5,23 +5,23 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -lsfml-graphics -lsfml-window
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY bin)
 
 set(SOURCE_FILES
-    "Pokémon Xici/Texture/AnimatedSprite.cpp"
-    "Pokémon Xici/Texture/AnimatedSprite.hpp"
-    "Pokémon Xici/Texture/Animation.cpp"
-    "Pokémon Xici/Texture/Animation.hpp"
-    "Pokémon Xici/Texture/XSprite.cpp"
-    "Pokémon Xici/Texture/XSprite.h"
-    "Pokémon Xici/main.cpp"
-    "Pokémon Xici/TypeWriter.cpp"
-    "Pokémon Xici/TypeWriter.h"
-    "Pokémon Xici/XBattle.cpp"
-    "Pokémon Xici/XBattle.h"
-    "Pokémon Xici/XEngine.cpp"
-    "Pokémon Xici/XEngine.h"
-    "Pokémon Xici/XMap.cpp"
-    "Pokémon Xici/XMap.h"
-    "Pokémon Xici/XPlayer.cpp"
-    "Pokémon Xici/XPlayer.h"
-    "Pokémon Xici/Interfaces/States.h" "Pokémon Xici/Objects/Pokemon.cpp" "Pokémon Xici/Objects/Pokemon.h" "Pokémon Xici/Objects/Objects.h")
+    "Pokemon Xici/Texture/AnimatedSprite.cpp"
+    "Pokemon Xici/Texture/AnimatedSprite.hpp"
+    "Pokemon Xici/Texture/Animation.cpp"
+    "Pokemon Xici/Texture/Animation.hpp"
+    "Pokemon Xici/Texture/XSprite.cpp"
+    "Pokemon Xici/Texture/XSprite.h"
+    "Pokemon Xici/main.cpp"
+    "Pokemon Xici/TypeWriter.cpp"
+    "Pokemon Xici/TypeWriter.h"
+    "Pokemon Xici/XBattle.cpp"
+    "Pokemon Xici/XBattle.h"
+    "Pokemon Xici/XEngine.cpp"
+    "Pokemon Xici/XEngine.h"
+    "Pokemon Xici/XMap.cpp"
+    "Pokemon Xici/XMap.h"
+    "Pokemon Xici/XPlayer.cpp"
+    "Pokemon Xici/XPlayer.h"
+    "Pokemon Xici/Interfaces/States.h" "Pokemon Xici/Objects/Pokemon.cpp" "Pokemon Xici/Objects/Pokemon.h" "Pokemon Xici/Objects/Objects.h")
 
 add_executable(Pokemon_Xici ${SOURCE_FILES})
