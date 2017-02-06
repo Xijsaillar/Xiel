@@ -34,7 +34,7 @@ void XBattle::Render(sf::RenderWindow *renderWindow, float deltaTime) {
 	renderWindow->setView(m_pBattleView);
 	renderWindow->draw(*GetSprite(BATTLE_FRAME + BATTLE_BACK_STANDARD));
 	renderWindow->draw(*GetSprite(BATTLE_FRAME + BATTLE_MENU_BIG));
-	renderWindow->draw(*GetSprite(BATTLE_FRAME + BATTLE_MENU_SMALL));
+	//renderWindow->draw(*GetSprite(BATTLE_FRAME + BATTLE_MENU_SMALL));
 
 	renderWindow->draw(*m_pPlayer.GetSprite());
 	renderWindow->draw(*m_pEnemy.GetSprite());

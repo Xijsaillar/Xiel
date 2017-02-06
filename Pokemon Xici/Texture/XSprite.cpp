@@ -1,5 +1,5 @@
 #include "XSprite.h"
-#include <iomanip>
+
 
 bool XSprite::LoadTileSet(std::string szFile, int scale, int idx) {
 	
