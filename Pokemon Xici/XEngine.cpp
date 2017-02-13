@@ -1,11 +1,9 @@
 #include "XEngine.h"
-#include "Objects/Pokemon.h"
 #include <random>
 
 bool XEngine::Init() {
-	videoSize = sf::Vector2f(512, 384);
-	window = new sf::RenderWindow(sf::VideoMode((unsigned int) videoSize.x, (unsigned int) videoSize.y),
-								  "Pokemon Xici");
+	videoSize = sf::Vector2u(512, 384);
+	window = new sf::RenderWindow({videoSize.x, videoSize.y}, "Pokemon Xici");
 	window->setFramerateLimit(60);
 
 	if (!m_pFont.loadFromFile("data/pkmnfl.ttf"))
@@ -26,19 +24,19 @@ bool XEngine::Init() {
 	m_pSprites.LoadTexture("data/textskin.png", MENU_FRAME);
 
 	// Init the other classes
-	m_pMap.Init(*this);
-	m_pMap.LoadMapFromFile("data/xiel_test.prmp");
+	m_pMap->Init(*this);
+	m_pMap->LoadMapFromFile("data/xiel_test.prmp");
 	m_pPlayer.Init(sf::Vector2f(videoSize.x / 2, videoSize.y / 2), window->getDefaultView());
 	m_pPlayer.Step(sf::Vector2i(-4, 0));
 
 	PushState(std::make_unique<XPlayer>(m_pPlayer));
-	srand(time(NULL));
+	srand((uint) time(NULL));
 
 	return true;
 }
 
 bool XEngine::GetAbsoluteCoordinates(sf::Vector2f vector) {
-	return m_pMap.isCollision(vector);
+	return m_pMap->isCollision(vector);
 }
 
 void XEngine::Go()

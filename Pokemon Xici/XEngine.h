@@ -37,11 +37,11 @@ public:
 
 	int rdmtest(int);
 	// Constructor
-	XEngine() : m_pSprites() { };
+	XEngine() : m_pSprites(), m_pMap(new XMap) {};
 	// Get Sprite class
 	XSprite* GetXSprite() { return &m_pSprites; }
 
-	XMap *GetXMap() { return &m_pMap; }
+	const std::unique_ptr<XMap> &GetXMap() { return m_pMap; }
 
 	Typewriter *GetTypewriter() { return &m_pWriter; }
 
@@ -54,7 +54,7 @@ private:
 	//SFML Render Window
 	sf::RenderWindow* window;
 	//Render Window (and Camera) size
-	sf::Vector2f videoSize;
+	sf::Vector2u videoSize;
 
 	// Stuff used for states
 	std::stack<std::unique_ptr<Interfaces::States>> m_sStack;
@@ -76,6 +76,6 @@ private:
 	XPlayer m_pPlayer;
 	XSprite m_pSprites;
 	XBattle m_pBattle;
-	XMap m_pMap;
+	std::unique_ptr<XMap> m_pMap;
 };
 #endif
