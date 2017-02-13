@@ -54,7 +54,7 @@ void XPlayer::Init(sf::Vector2f pos, sf::View pView) {
 void XPlayer::Render(sf::RenderWindow *renderWindow, float deltaTime) {
 
 	renderWindow->setView(m_pPlayerView);
-	XEngine::GetInstance().GetXMap()->Render(renderWindow, vPosition);
+	XEngine::GetInstance().GetXMap()->Render(renderWindow, vPosition, deltaTime);
 
 	renderWindow->draw(animatedSprite);
 	animatedSprite.play(*currentAnimation);

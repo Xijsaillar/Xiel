@@ -1,6 +1,7 @@
 #include "XMap.h"
 #include <fstream>
 #include <math.h>
+#include <iostream>
 
 // TODO
 // Rewrite because working with not-shown tiles is bullshit
@@ -10,13 +11,41 @@ bool XMap::Init(XEngine& pEngine) {
 	return true;
 }
 
-void XMap::Render(sf::RenderWindow* window, sf::Vector2f position) {
-	for (int i = 0; i < m_vTiles.size(); i++) {
-		auto s = m_vTiles[i];
-		s.sprite.setPosition(s.sprite.getPosition().x  + position.x, s.sprite.getPosition().y  + position.y);
-		window->draw(s.sprite);
+void XMap::Render(sf::RenderWindow *window, sf::Vector2f position, float deltaTime) {
 
+	deltaTime = clock.getElapsedTime().asSeconds();
+
+	bool tmp{false};
+
+	for (auto it = m_vTiles.begin(); it != m_vTiles.end(); it++) {
+		auto s = (*it);
+		s.sprite.setPosition(s.sprite.getPosition().x  + position.x, s.sprite.getPosition().y  + position.y);
+
+		if ((deltaTime - lastUpdated) > .25f) {
+			switch (s.info.tileID) {
+				case 4:
+					it->sprite.setTextureRect({16 * it->currAni++, 0, mapHeader.Scale, mapHeader.Scale});
+					if (it->currAni == 5)
+						it->currAni = 0;
+					break;
+				case 299:
+				case 300:
+					it->sprite.setTextureRect({16 * it->currAni++, 0, mapHeader.Scale, mapHeader.Scale});
+					if (it->currAni == 8)
+						it->currAni = 0;
+					break;
+				default:
+					break;
+			}
+			tmp = true;
+		}
+
+		window->draw(s.sprite);
 	}
+	if (tmp) {
+		lastUpdated = clock.getElapsedTime().asSeconds();
+	}
+
 	DrawGrid(window);
 }
 
@@ -24,9 +53,9 @@ void XMap::Render(sf::RenderWindow* window, sf::Vector2f position) {
 //************************************
 // Method:    isCollision
 // FullName:  XMap::isCollision
-// Access:    public 
+// Access:    public
 // Returns:   bool
-// Qualifier: 
+// Qualifier:
 // Parameter: sf::Vector2f pos
 //************************************
 bool XMap::isCollision(sf::Vector2f pos) {
@@ -71,6 +100,15 @@ bool XMap::LoadMapFromFile(std::string filename) {
 	if (!tileset.loadFromFile("data/tileset_firered.png"))
 		return false;
 
+	if (!flowers.loadFromFile("data/animation/flowers.png"))
+		return false;
+
+	if (!water.loadFromFile("data/animation/water.png"))
+		return false;
+
+	if (!wcr.loadFromFile("data/animation/wcr.png"))
+		return false;
+
 	float x = 0, y = 0;
 	// Read X tiles and proceed them
 	for (int i = 0; i < mapHeader.Count; i++) {
@@ -82,8 +120,20 @@ bool XMap::LoadMapFromFile(std::string filename) {
 		file.read((char*)&tile, sizeof(TILE));
 		auto vector = CoordinateFromID(tileset.getSize().x / mapHeader.Scale, tile.tileID);
 
-		tilesprite.setTexture(tileset);
-		tilesprite.setTextureRect(sf::IntRect(vector.x * mapHeader.Scale, vector.y * mapHeader.Scale, mapHeader.Scale, mapHeader.Scale));
+		if (tile.tileID == 4) {
+			tilesprite.setTexture(flowers);
+			tilesprite.setTextureRect({0, 0, mapHeader.Scale, mapHeader.Scale});
+		} else if (tile.tileID == 299) {
+			tilesprite.setTexture(water);
+			tilesprite.setTextureRect({0, 0, mapHeader.Scale, mapHeader.Scale});
+		} else if (tile.tileID == 300) {
+			tilesprite.setTexture(wcr);
+			tilesprite.setTextureRect({0, 0, mapHeader.Scale, mapHeader.Scale});
+		} else {
+			tilesprite.setTexture(tileset);
+			tilesprite.setTextureRect(
+					{vector.x * mapHeader.Scale, vector.y * mapHeader.Scale, mapHeader.Scale, mapHeader.Scale});
+		}
 		tilesprite.setPosition(x, y);
 		t.info = tile;
 		t.sprite = tilesprite;

@@ -26,6 +26,7 @@ struct TILE {
 struct MapTile {
 	sf::Sprite sprite;
 	TILE info;
+	int currAni{0};
 };
 #pragma pack(pop)
 
@@ -37,16 +38,21 @@ public:
 
 	bool Init(XEngine&);
 	bool LoadMapFromFile(std::string filename);
-	void Render(sf::RenderWindow* window, sf::Vector2f position);
+
+	void Render(sf::RenderWindow *window, sf::Vector2f position, float deltaTime);
 	bool isCollision(sf::Vector2f);
 private:
 	int CoordinateToID(int width, int x, int y);
+
+	bool flipped{false};
+	float delta{0}, lastUpdated{0};
+	sf::Clock clock;
 
 	sf::Vector2i CoordinateFromID(int width, int index);
 	// Debug Only
 	void DrawGrid(sf::RenderWindow*);
 	// Texture & sprites
-	sf::Texture texture, tileset;
+	sf::Texture texture, tileset, flowers, water, wcr;
 	sf::Sprite sprite;
 	MAPHEADER mapHeader;
 	std::vector<MapTile> m_vTiles;

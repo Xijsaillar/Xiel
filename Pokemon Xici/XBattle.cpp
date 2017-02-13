@@ -64,7 +64,7 @@ void XBattle::Input(float deltaTime) {}
 void XBattle::SetContactText(std::string szText) {
 	XEngine::GetInstance().GetTypewriter()->reset();
 
-	XEngine::GetInstance().GetTypewriter()->setCharSize(19);
+	XEngine::GetInstance().GetTypewriter()->setCharSize(28);
 	XEngine::GetInstance().GetTypewriter()->setColor(sf::Color(248, 248, 248));
 	XEngine::GetInstance().GetTypewriter()->setPosition(sf::Vector2f(21, 305));
 	XEngine::GetInstance().GetTypewriter()->setString(szText);
