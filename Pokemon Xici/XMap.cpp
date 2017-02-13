@@ -1,52 +1,53 @@
 #include "XMap.h"
 #include <fstream>
 #include <math.h>
-#include <iostream>
 
 // TODO
 // Rewrite because working with not-shown tiles is bullshit
 
-bool XMap::Init(XEngine& pEngine) {
+bool XMap::Init() {
 	m_vTiles.clear();
 	return true;
 }
 
-void XMap::Render(sf::RenderWindow *window, sf::Vector2f position, float deltaTime) {
+/**
+ * Render the map
+ * @param window - the Render Window
+ * @param position - the players position, needed to calculate the actual position for drawing
+ */
+void XMap::Render(sf::RenderWindow *window, sf::Vector2f position) {
 
-	deltaTime = clock.getElapsedTime().asSeconds();
+	float elapsed = clock.getElapsedTime().asSeconds();
 
 	bool tmp{false};
 
 	for (auto it = m_vTiles.begin(); it != m_vTiles.end(); it++) {
 		auto s = (*it);
-		s.sprite.setPosition(s.sprite.getPosition().x  + position.x, s.sprite.getPosition().y  + position.y);
 
-		if ((deltaTime - lastUpdated) > .25f) {
-			switch (s.info.tileID) {
-				case 4:
-					it->sprite.setTextureRect({16 * it->currAni++, 0, mapHeader.Scale, mapHeader.Scale});
-					if (it->currAni == 5)
-						it->currAni = 0;
-					break;
-				case 299:
-				case 300:
-					it->sprite.setTextureRect({16 * it->currAni++, 0, mapHeader.Scale, mapHeader.Scale});
-					if (it->currAni == 8)
-						it->currAni = 0;
-					break;
-				default:
-					break;
+		if (m_vAnimations.count(s.info.tileID) == 0) {
+			s.sprite.setPosition(s.sprite.getPosition().x + position.x, s.sprite.getPosition().y + position.y);
+			window->draw(s.sprite);
+		} else {
+			m_vAnimations[s.info.tileID]->sprite.setPosition(s.sprite.getPosition().x + position.x,
+															 s.sprite.getPosition().y + position.y);
+
+			if ((elapsed - lastUpdated) > .25f) {
+				m_vAnimations[s.info.tileID]->sprite.setTextureRect(
+						{16 * it->currAni++, 0, mapHeader.Scale, mapHeader.Scale});
+
+				if (it->currAni == m_vAnimations[s.info.tileID]->nFrames)
+					it->currAni = 0;
+				tmp = true;
 			}
-			tmp = true;
+			window->draw(m_vAnimations[s.info.tileID]->sprite);
 		}
-
-		window->draw(s.sprite);
 	}
 	if (tmp) {
 		lastUpdated = clock.getElapsedTime().asSeconds();
 	}
 
-	DrawGrid(window);
+	if (bIsDebug)
+		DrawGrid(window);
 }
 
 
@@ -88,7 +89,32 @@ void XMap::DrawGrid(sf::RenderWindow* window) {
 	}
 }
 
+void XMap::LoadAnimationTiles() {
+
+	std::fstream in("data/animation/animation.lnk", std::ios::in | std::ios::binary);
+	if (!in.is_open())
+		return;
+
+	while (in.good()) {
+
+		int id{0};
+		std::string fileName{0};
+		std::unique_ptr<TileAnimation> a{new TileAnimation};
+		in >> id >> a->nFrames >> fileName;
+
+		if (!a->texture.loadFromFile("data/animation/" + fileName))
+			return;
+
+		a->sprite.setTexture(a->texture);
+		a->sprite.setTextureRect({0, 0, 16, 16});
+		m_vAnimations.insert(std::make_pair(id, std::move(a)));
+	}
+	in.close();
+}
+
 bool XMap::LoadMapFromFile(std::string filename) {
+
+	this->LoadAnimationTiles();
 
 	std::ifstream file(filename, std::ios::binary);
 	if (!file.is_open())
@@ -98,15 +124,6 @@ bool XMap::LoadMapFromFile(std::string filename) {
 	file.read((char*)&mapHeader, sizeof(MAPHEADER));
 
 	if (!tileset.loadFromFile("data/tileset_firered.png"))
-		return false;
-
-	if (!flowers.loadFromFile("data/animation/flowers.png"))
-		return false;
-
-	if (!water.loadFromFile("data/animation/water.png"))
-		return false;
-
-	if (!wcr.loadFromFile("data/animation/wcr.png"))
 		return false;
 
 	float x = 0, y = 0;
@@ -120,20 +137,9 @@ bool XMap::LoadMapFromFile(std::string filename) {
 		file.read((char*)&tile, sizeof(TILE));
 		auto vector = CoordinateFromID(tileset.getSize().x / mapHeader.Scale, tile.tileID);
 
-		if (tile.tileID == 4) {
-			tilesprite.setTexture(flowers);
-			tilesprite.setTextureRect({0, 0, mapHeader.Scale, mapHeader.Scale});
-		} else if (tile.tileID == 299) {
-			tilesprite.setTexture(water);
-			tilesprite.setTextureRect({0, 0, mapHeader.Scale, mapHeader.Scale});
-		} else if (tile.tileID == 300) {
-			tilesprite.setTexture(wcr);
-			tilesprite.setTextureRect({0, 0, mapHeader.Scale, mapHeader.Scale});
-		} else {
-			tilesprite.setTexture(tileset);
-			tilesprite.setTextureRect(
-					{vector.x * mapHeader.Scale, vector.y * mapHeader.Scale, mapHeader.Scale, mapHeader.Scale});
-		}
+		tilesprite.setTexture(tileset);
+		tilesprite.setTextureRect(
+				{vector.x * mapHeader.Scale, vector.y * mapHeader.Scale, mapHeader.Scale, mapHeader.Scale});
 		tilesprite.setPosition(x, y);
 		t.info = tile;
 		t.sprite = tilesprite;
@@ -166,7 +172,6 @@ int XMap::CoordinateToID(int width, int x, int y)
 // Returns:   sf::Vector2i
 // Qualifier: I HAVE NO IDEA WHAT THE FUCK THIS DOES - DO NOT TOUCH 
 // Parameter: int width
-// Parameter: int height
 // Parameter: int index
 //************************************
 sf::Vector2i XMap::CoordinateFromID(int width, int index)

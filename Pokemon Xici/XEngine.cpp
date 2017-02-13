@@ -4,19 +4,19 @@
 bool XEngine::Init() {
 	videoSize = sf::Vector2u{512, 384};
 	window = new sf::RenderWindow{{videoSize.x, videoSize.y}, "Pokemon Xici"};
-	window->setFramerateLimit(60);
+	//window->setFramerateLimit(60);
 
 	if (!m_pFont.loadFromFile("data/pkmnfl.ttf"))
 		return false;
 
-	if (!m_pBattle.Init(window->getDefaultView()))
+	if (!m_pBattle->Init(window->getDefaultView()))
 		return false;
 
 	if (!m_pSprites.LoadPokemon())
 		return false;
 
 	m_pWriter.init("Init...", m_pFont, 16, 0.025);
-	m_pWriter.setPosition(sf::Vector2f(17, 316));
+	m_pWriter.setPosition({17, 316});
 	
 	if (!window)
 		return false;
@@ -24,19 +24,15 @@ bool XEngine::Init() {
 	m_pSprites.LoadTexture("data/textskin.png", MENU_FRAME);
 
 	// Init the other classes
-	m_pMap->Init(*this);
+	m_pMap->Init();
 	m_pMap->LoadMapFromFile("data/xiel_test.prmp");
-	m_pPlayer.Init({videoSize.x / 2.0f, videoSize.y / 2.0f}, window->getDefaultView());
-	m_pPlayer.Step({-4, 0});
+	m_pPlayer->Init({videoSize.x / 2.0f, videoSize.y / 2.0f}, window->getDefaultView());
+	m_pPlayer->SetRelativePosition({-4, 0});
 
-	PushState(std::make_unique<XPlayer>(m_pPlayer));
+	m_pState = m_pPlayer.get();
 	srand((uint) time(NULL));
 
 	return true;
-}
-
-bool XEngine::GetAbsoluteCoordinates(sf::Vector2f vector) {
-	return m_pMap->isCollision(vector);
 }
 
 void XEngine::Go()
@@ -53,9 +49,9 @@ void XEngine::MainLoop()
 	while (window->isOpen())
 	{
 		window->clear(sf::Color::Black);
-		m_sStack.top()->Input(deltaTime);
-		m_sStack.top()->Render(window, deltaTime);
-		m_sStack.top()->Update(deltaTime);
+		m_pState->Input(deltaTime);
+		m_pState->Render(window, deltaTime);
+		m_pState->Update(deltaTime);
 
 		WindowEvents();
 		deltaTime = m_pClock.restart().asSeconds();
@@ -90,11 +86,18 @@ void XEngine::WindowEvents()
 			if (evt.key.code == sf::Keyboard::C) {
 				Objects::Pokemon player(rand() % 151 + 1, rdmtest(rand() % 2 + 2));
 				Objects::Pokemon enemy(rand() % 151 + 1, rdmtest(rand() % 2));
-				m_pBattle.InitBattle(player, enemy);
-				PushState(std::make_unique<XBattle>(m_pBattle));
+				m_pBattle->InitBattle(player, enemy);
+				m_pState = m_pBattle.get();
 			}
 			if (evt.key.code == sf::Keyboard::W) {
-				PopState();
+				m_pState = m_pPlayer.get();
+			}
+			if (evt.key.code == sf::Keyboard::P) {
+				std::cout << "Currently at absolute " << m_pPlayer->GetAbsolutePosition().x << "X : "
+						  << m_pPlayer->GetAbsolutePosition().y << "Y" << std::endl;
+			}
+			if (evt.key.code == sf::Keyboard::D) {
+				m_pMap->SetDebug();
 			}
 		}
 	}
