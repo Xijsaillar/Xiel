@@ -10,8 +10,8 @@
 #include "XMap.h"
 #include "XPlayer.h"
 #include "XBattle.h"
-#include "Texture/XSprite.h"
-#include "Interfaces/States.h"
+#include "XSprite.h"
+#include "States.h"
 #include "TypeWriter.h"
 
 using namespace Interfaces;

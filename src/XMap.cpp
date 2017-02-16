@@ -36,8 +36,7 @@ void XMap::test(sf::RenderWindow *window, sf::Vector2f position) {
  * @param position - the players position, needed to calculate the actual position for drawing
  */
 void XMap::Render(sf::RenderWindow *window, sf::Vector2f position) {
-	test(window, position);
-	return;
+
 	float elapsed = clock.getElapsedTime().asSeconds();
 
 	bool tmp{false};
@@ -159,7 +158,7 @@ bool XMap::LoadMapFromFile(std::string filename, int nOffsetX = 0, int nOffsetY 
 		tilesprite.setPosition(x, y);
 		t.info = tile;
 		t.sprite = tilesprite;
-		//m_vTiles.push_back(t);
+		m_vTiles.push_back(t);
 		m_vMap[std::to_string(x) + ":" + std::to_string(y)] = std::make_unique<MapTile>(t);
 
 		if (x + mapHeader.Scale == mapHeader.Width * mapHeader.Scale) {
