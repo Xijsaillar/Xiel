@@ -9,31 +9,32 @@
 
 #include <SFML/Graphics.hpp>
 
+constexpr int g_nScale = 16;
+
 #pragma pack(push, 1)
-struct MAPHEADER {
-	int Width;
-	int Height;
-	int Scale;
-	int Count;
+typedef struct {
+	int nWidth;
+	int nHeight;
+	int nScale;
+	int nCount;
 #ifdef VERSION2_MAP
 	char md5[32];
 #endif
-};
+} XMapHeader;
 
-struct TILE {
-	int tileID;
-	int CollissionLayer;
+typedef struct {
+	int nTileID;
+	int nCollisionLayer;
 #ifndef VERSION2_MAP
 	int EventID;
 #endif
-};
-
-struct MapTile {
-	sf::Sprite sprite;
-	TILE info;
-	sf::Vector2i vBasePosition;
-	int currAni{0};
-};
+} XTile;
 #pragma pack(pop)
+
+typedef struct {
+	sf::Sprite tileSprite;
+	XTile xTile;
+	sf::Vector2i vBasePosition;
+} XMapTile;
 
 #endif //POKEMON_XICI_MAPSTRUCTS_H
