@@ -32,18 +32,18 @@ void XMap::Update() {
 	// If the last update was over 0.25 seconds ago...
 	if ((elapsed - lastUpdated) > .25f) {
 		// ...loop through our animations...
-		// fucking for(auto : m_vAnimations) doesn't work due to the unique_ptr...
-		for (auto it = m_vAnimations.begin(); it != m_vAnimations.end(); it++) {
+		for (auto &it : m_vAnimations) {
+			//for (auto it = m_vAnimations.begin(); it != m_vAnimations.end(); it++) {
 
 			// ...set the tileTexture rect to the next frame...
-			it->second->tileSprite.setTextureRect({16 * it->second->nCurrentAnimation++,
-												   0,
-												   g_nScale,
-												   g_nScale});
+			it.second->tileSprite.setTextureRect({16 * it.second->nCurrentAnimation++,
+												  0,
+												  g_nScale,
+												  g_nScale});
 
 			// ... reset the current animation index to zero if it's the same as the actual frames...
-			if (it->second->nCurrentAnimation == it->second->nFrames) {
-				it->second->nCurrentAnimation = 0;
+			if (it.second->nCurrentAnimation == it.second->nFrames) {
+				it.second->nCurrentAnimation = 0;
 			}
 		}
 		// ... and finally update our lastUpdated
