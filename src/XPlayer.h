@@ -40,6 +40,8 @@ public:
 
 	sf::Vector2f GetAbsolutePosition();
 
+	sf::Vector2f vCurrentPos;
+
 private:
 	// Animation relevant
 	AnimatedSprite animatedSprite;

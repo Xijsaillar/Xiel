@@ -35,12 +35,13 @@ void XPlayer::Init(sf::Vector2f pos, sf::View pView) {
 	currentAnimation = &walkingAnimation[DOWN];
 	animatedSprite = AnimatedSprite(sf::seconds(fWalkSpeed), true, false);
 	animatedSprite.setPosition(pos);
-	vPosition = vStartPos = pos;
-	vPosition.y -= 28;
+	vPosition = vStartPos = vCurrentPos = pos;
+	vPosition.y += 4;
+	vCurrentPos.y += 4;
 }
 
 sf::Vector2f XPlayer::GetAbsolutePosition() {
-	return {vStartPos.x - vPosition.x, vStartPos.y - vPosition.y + 4};
+	return {vStartPos.x - vCurrentPos.x, vStartPos.y - vCurrentPos.y + 4};
 }
 
 //************************************
@@ -127,6 +128,7 @@ void XPlayer::Input(float deltaTime) {
 				vPosition.y += nMoveSpeed * (isRunning ? 2 : 1) * deltaTime;
 				if (vPosition.y >= fNextSpot) {
 					vPosition.y = fNextSpot;
+					vCurrentPos = vPosition;
 					isMoving = false;
 					isRunning = false;
 				}
@@ -136,6 +138,7 @@ void XPlayer::Input(float deltaTime) {
 				vPosition.y -= nMoveSpeed * (isRunning ? 2 : 1) * deltaTime;
 				if (vPosition.y <= fNextSpot) {
 					vPosition.y = fNextSpot;
+					vCurrentPos = vPosition;
 					isMoving = false;
 					isRunning = false;
 				}
@@ -144,6 +147,7 @@ void XPlayer::Input(float deltaTime) {
 				vPosition.x += nMoveSpeed * (isRunning ? 2 : 1) * deltaTime;
 				if (vPosition.x >= fNextSpot) {
 					vPosition.x = fNextSpot;
+					vCurrentPos = vPosition;
 					isMoving = false;
 					isRunning = false;
 				}
@@ -152,6 +156,7 @@ void XPlayer::Input(float deltaTime) {
 				vPosition.x -= nMoveSpeed * (isRunning ? 2 : 1) * deltaTime;
 				if (vPosition.x <= fNextSpot) {
 					vPosition.x = fNextSpot;
+					vCurrentPos = vPosition;
 					isMoving = false;
 					isRunning = false;
 				}

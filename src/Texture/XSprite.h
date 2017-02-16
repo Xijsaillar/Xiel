@@ -19,9 +19,7 @@
 
 class XSprite {
 public:
-	XSprite() : m_pSprites(), m_pTextures() {
-		m_pSprites.clear();
-		m_pTextures.clear();
+	XSprite() {
 	}
 
 	~XSprite() {}

@@ -1,9 +1,11 @@
 #include "XMap.h"
 #include <fstream>
 #include <math.h>
+#include "XEngine.h"
 
 // TODO
-// Rewrite because working with not-shown tiles is bullshit
+// Done rewriting for only visible tiles
+// Now check if it actually works
 
 bool XMap::Init() {
 	m_vTiles.clear();
@@ -14,54 +16,49 @@ bool XMap::Init() {
 	return tileset.loadFromFile("data/tileset_firered.png");
 }
 
-
-void XMap::test(sf::RenderWindow *window, sf::Vector2f position) {
-
-	for (int y{0}; y < mapHeader.Height; y += 16) {
-		for (int x{0}; x < mapHeader.Width; x += 16) {
-			if (m_vMap.count(std::to_string(x) + ":" + std::to_string(y)) >= 1) {
-				m_vMap[std::to_string(x) + ":" + std::to_string(y)]->sprite.setPosition(
-						m_vMap[std::to_string(x) + ":" + std::to_string(y)]->sprite.getPosition().x + position.x,
-						m_vMap[std::to_string(x) + ":" + std::to_string(y)]->sprite.getPosition().y + position.y);
-				window->draw(m_vMap[std::to_string(x) + ":" + std::to_string(y)]->sprite);
-			}
-		}
-	}
-
-}
-
 /**
  * Render the map
  * @param window - the Render Window
  * @param position - the players position, needed to calculate the actual position for drawing
  */
 void XMap::Render(sf::RenderWindow *window, sf::Vector2f position) {
-
 	float elapsed = clock.getElapsedTime().asSeconds();
-
 	bool tmp{false};
 
-	for (auto it = m_vTiles.begin(); it != m_vTiles.end(); it++) {
-		auto s = (*it);
+	sf::Vector2f pos = g_XEngine.GetPlayer()->GetAbsolutePosition();
 
-		if (m_vAnimations.count(s.info.tileID) == 0) {
-			s.sprite.setPosition(s.sprite.getPosition().x + position.x, s.sprite.getPosition().y + position.y);
-			window->draw(s.sprite);
-		} else {
-			m_vAnimations[s.info.tileID]->sprite.setPosition(s.sprite.getPosition().x + position.x,
-															 s.sprite.getPosition().y + position.y);
+	for (int y = -192; y < 192; y += 16) {
+		for (int x = -192; x < 192; x += 16) {
 
-			if ((elapsed - lastUpdated) > .25f) {
-				m_vAnimations[s.info.tileID]->sprite.setTextureRect(
-						{16 * it->currAni++, 0, mapHeader.Scale, mapHeader.Scale});
+			sf::Vector2i p{(int) pos.x + x, (int) pos.y + y};
 
-				if (it->currAni == m_vAnimations[s.info.tileID]->nFrames)
-					it->currAni = 0;
-				tmp = true;
+			if (m_vMap.count(p) >= 1) {
+
+				if (m_vAnimations.count(m_vMap[p]->info.tileID) == 1) {
+					m_vAnimations[m_vMap[p]->info.tileID]->sprite.setPosition(m_vMap[p]->vBasePosition.x + position.x,
+																			  m_vMap[p]->vBasePosition.y + position.y);
+
+					if ((elapsed - lastUpdated) > .25f) {
+						m_vAnimations[m_vMap[p]->info.tileID]->sprite.setTextureRect({16 * m_vMap[p]->currAni++, 0,
+																					  mapHeader.Scale,
+																					  mapHeader.Scale});
+
+						if (m_vMap[p]->currAni == m_vAnimations[m_vMap[p]->info.tileID]->nFrames)
+							m_vMap[p]->currAni = 0;
+						tmp = true;
+					}
+					window->draw(m_vAnimations[m_vMap[p]->info.tileID]->sprite);
+
+				} else {
+					m_vMap[p]->sprite.setPosition(m_vMap[p]->vBasePosition.x + position.x,
+												  m_vMap[p]->vBasePosition.y + position.y);
+
+					window->draw(m_vMap[p]->sprite);
+				}
 			}
-			window->draw(m_vAnimations[s.info.tileID]->sprite);
 		}
 	}
+
 	if (tmp) {
 		lastUpdated = clock.getElapsedTime().asSeconds();
 	}
@@ -141,7 +138,7 @@ bool XMap::LoadMapFromFile(std::string filename, int nOffsetX = 0, int nOffsetY 
 	// Read file header
 	file.read((char *) &mapHeader, sizeof(MAPHEADER));
 
-	float x = nOffsetX, y = nOffsetY;
+	int x = nOffsetX, y = nOffsetY;
 	// Read X tiles and proceed them
 	for (int i = 0; i < mapHeader.Count; i++) {
 
@@ -156,10 +153,12 @@ bool XMap::LoadMapFromFile(std::string filename, int nOffsetX = 0, int nOffsetY 
 		tilesprite.setTextureRect(
 				{vector.x * mapHeader.Scale, vector.y * mapHeader.Scale, mapHeader.Scale, mapHeader.Scale});
 		tilesprite.setPosition(x, y);
+		t.vBasePosition = {x, y};
 		t.info = tile;
 		t.sprite = tilesprite;
 		m_vTiles.push_back(t);
-		m_vMap[std::to_string(x) + ":" + std::to_string(y)] = std::make_unique<MapTile>(t);
+
+		m_vMap[{x, y}] = std::make_unique<MapTile>(t);
 
 		if (x + mapHeader.Scale == mapHeader.Width * mapHeader.Scale) {
 			y += mapHeader.Scale;

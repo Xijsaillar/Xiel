@@ -26,7 +26,6 @@ public:
 
 	// De-constructor
 	XEngine(XEngine const &) = delete;
-
 	void operator=(XEngine const &) = delete;
 
 
@@ -41,6 +40,8 @@ public:
 	XSprite *GetXSprite() { return &m_pSprites; }
 
 	const std::unique_ptr<XMap> &GetXMap() { return m_pMap; }
+
+	const std::unique_ptr<XPlayer> &GetPlayer() { return m_pPlayer; }
 
 	Typewriter *GetTypewriter() { return &m_pWriter; }
 
@@ -73,5 +74,8 @@ private:
 	std::unique_ptr<XBattle> m_pBattle{new XBattle};
 	std::unique_ptr<XMap> m_pMap;
 };
+
+// Just something neat
+#define g_XEngine XEngine::GetInstance()
 
 #endif

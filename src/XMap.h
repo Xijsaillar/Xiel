@@ -1,38 +1,14 @@
 #pragma once
 #ifndef _XMAP_H_
 #define _XMAP_H_
-#define VERSION2_MAP
 
 #include <SFML/Graphics.hpp>
 #include <unordered_map>
 #include <iostream>
-#include "Objects/Objects.h"
+#include "MapStructs.h"
+#include "Objects.h"
 
 class XEngine;
-
-#pragma pack(push, 1)
-struct MAPHEADER {
-	int Width;
-	int Height;
-	int Scale;
-	int Count;
-#ifdef VERSION2_MAP
-	char md5[32];
-#endif
-};
-struct TILE {
-	int tileID;
-	int CollissionLayer;
-#ifndef VERSION2_MAP
-	int EventID;
-#endif
-};
-struct MapTile {
-	sf::Sprite sprite;
-	TILE info;
-	int currAni{0};
-};
-#pragma pack(pop)
 
 struct TileAnimation {
 	sf::Texture texture;
@@ -53,8 +29,6 @@ public:
 	void SetDebug() { bIsDebug = !bIsDebug; }
 
 	void Render(sf::RenderWindow *window, sf::Vector2f position);
-
-	void test(sf::RenderWindow *window, sf::Vector2f position);
 
 	bool isCollision(sf::Vector2f);
 
@@ -79,7 +53,7 @@ private:
 	MAPHEADER mapHeader;
 	std::vector<MapTile> m_vTiles;
 	std::unordered_map<int, std::unique_ptr<TileAnimation>> m_vAnimations;
-	std::unordered_map<std::string, std::unique_ptr<MapTile>> m_vMap;
+	std::unordered_map<sf::Vector2i, std::unique_ptr<MapTile>, KeyHasher> m_vMap;
 };
 
 #endif // _XMAP_H_

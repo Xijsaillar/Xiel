@@ -2,7 +2,7 @@
 
 int main() {
 	try {
-		XEngine::GetInstance().Go();
+		g_XEngine.Go();
 	}
 	catch (char *e) {
 		throw e;

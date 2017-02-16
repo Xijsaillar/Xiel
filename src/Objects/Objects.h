@@ -16,4 +16,17 @@ namespace Objects {
 	};
 }
 
+
+struct KeyHasher {
+	std::size_t operator()(const sf::Vector2i &k) const {
+		using std::size_t;
+		using std::hash;
+		using std::string;
+
+		return ((hash<int>()(k.x)
+				 ^ (hash<int>()(k.y) << 1)) >> 1);
+	}
+};
+
+
 #endif //POKEMON_XICI_OBJECTS_H
