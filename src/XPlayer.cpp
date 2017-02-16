@@ -14,7 +14,7 @@ void XPlayer::Init(sf::Vector2f pos, sf::View pView) {
 	m_pPlayerView = pView;
 	m_pPlayerView.zoom(0.5);
 	if (!texture.loadFromFile("data/player_male.png")) {
-		throw "Could not load player sprite!";
+		throw "Could not load player tileSprite!";
 	}
 
 	for (int i = 0; i < 4; ++i) {
@@ -40,7 +40,7 @@ void XPlayer::Init(sf::Vector2f pos, sf::View pView) {
 	vCurrentPos.y += 4;
 }
 
-sf::Vector2f XPlayer::GetAbsolutePosition() {
+sf::Vector2f XPlayer::GetRelativePosition() {
 	return {vStartPos.x - vCurrentPos.x, vStartPos.y - vCurrentPos.y + 4};
 }
 
@@ -86,8 +86,8 @@ void XPlayer::Input(float deltaTime) {
 			fNextSpot = vPosition.y + TILESIZE;
 			nDirection = UP;
 			currentAnimation = &walkingAnimation[isRunning ? UP + 4 : UP];
-			if (XEngine::GetInstance().GetXMap()->isCollision(
-					{vStartPos.x - vPosition.x, vStartPos.y + 4 - fNextSpot})) {
+			if (g_XEngine.GetXMap()->isCollision(
+					{(int) (vStartPos.x - vPosition.x), (int) (vStartPos.y + 4 - fNextSpot)})) {
 				return;
 			}
 			isMoving = true;
@@ -95,8 +95,8 @@ void XPlayer::Input(float deltaTime) {
 			fNextSpot = vPosition.y - TILESIZE;
 			nDirection = DOWN;
 			currentAnimation = &walkingAnimation[isRunning ? DOWN + 4 : DOWN];
-			if (XEngine::GetInstance().GetXMap()->isCollision(
-					{vStartPos.x - vPosition.x, vStartPos.y + 4 - fNextSpot})) {
+			if (g_XEngine.GetXMap()->isCollision(
+					{(int) (vStartPos.x - vPosition.x), (int) (vStartPos.y + 4 - fNextSpot)})) {
 				return;
 			}
 			isMoving = true;
@@ -104,8 +104,8 @@ void XPlayer::Input(float deltaTime) {
 			fNextSpot = vPosition.x + TILESIZE;
 			nDirection = LEFT;
 			currentAnimation = &walkingAnimation[isRunning ? LEFT + 4 : LEFT];
-			if (XEngine::GetInstance().GetXMap()->isCollision(
-					{vStartPos.x - fNextSpot, vStartPos.y + 4 - vPosition.y})) {
+			if (g_XEngine.GetXMap()->isCollision(
+					{(int) (vStartPos.x - fNextSpot), (int) (vStartPos.y + 4 - vPosition.y)})) {
 				return;
 			}
 			isMoving = true;
@@ -113,8 +113,8 @@ void XPlayer::Input(float deltaTime) {
 			fNextSpot = vPosition.x - TILESIZE;
 			nDirection = RIGHT;
 			currentAnimation = &walkingAnimation[isRunning ? RIGHT + 4 : RIGHT];
-			if (XEngine::GetInstance().GetXMap()->isCollision(
-					{vStartPos.x - fNextSpot, vStartPos.y + 4 - vPosition.y})) {
+			if (g_XEngine.GetXMap()->isCollision(
+					{(int) (vStartPos.x - fNextSpot), (int) (vStartPos.y + 4 - vPosition.y)})) {
 				return;
 			}
 			isMoving = true;
@@ -172,5 +172,5 @@ void XPlayer::Input(float deltaTime) {
 }
 
 void XPlayer::Update(float deltaTime) {
-
+	g_XEngine.GetXMap()->Update();
 }
