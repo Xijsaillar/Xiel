@@ -25,6 +25,7 @@ bool XEngine::Init() {
 	// Init the other classes
 	m_pMap->Init();
 	m_pMap->LoadMapFromFile("data/xiel_test.prmp", 0, 0);
+	m_pMap->LoadMapFromFile("data/xiel_test.prmp", 640, 0);
 	m_pPlayer->Init({videoSize.x / 2.0f, videoSize.y / 2.0f}, window->getDefaultView());
 	m_pPlayer->SetRelativePosition({-4, 0});
 
@@ -87,8 +88,8 @@ void XEngine::WindowEvents() {
 				m_pState = m_pPlayer.get();
 			}
 			if (evt.key.code == sf::Keyboard::P) {
-				std::cout << "Currently at absolute " << m_pPlayer->GetAbsolutePosition().x << "X : "
-						  << m_pPlayer->GetAbsolutePosition().y << "Y" << std::endl;
+				std::cout << "Currently at absolute " << m_pPlayer->GetRelativePosition().x << "X : "
+						  << m_pPlayer->GetRelativePosition().y << "Y" << std::endl;
 			}
 			if (evt.key.code == sf::Keyboard::D) {
 				m_pMap->SetDebug();
