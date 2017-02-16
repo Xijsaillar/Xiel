@@ -6,23 +6,23 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY bin)
 add_compile_options(-Wno-deprecated-declarations)
 
 set(SOURCE_FILES
-    "Pokemon Xici/Texture/AnimatedSprite.cpp"
-    "Pokemon Xici/Texture/AnimatedSprite.hpp"
-    "Pokemon Xici/Texture/Animation.cpp"
-    "Pokemon Xici/Texture/Animation.hpp"
-    "Pokemon Xici/Texture/XSprite.cpp"
-    "Pokemon Xici/Texture/XSprite.h"
-    "Pokemon Xici/main.cpp"
-    "Pokemon Xici/TypeWriter.cpp"
-    "Pokemon Xici/TypeWriter.h"
-    "Pokemon Xici/XBattle.cpp"
-    "Pokemon Xici/XBattle.h"
-    "Pokemon Xici/XEngine.cpp"
-    "Pokemon Xici/XEngine.h"
-    "Pokemon Xici/XMap.cpp"
-    "Pokemon Xici/XMap.h"
-    "Pokemon Xici/XPlayer.cpp"
-    "Pokemon Xici/XPlayer.h"
-    "Pokemon Xici/Interfaces/States.h" "Pokemon Xici/Objects/Pokemon.cpp" "Pokemon Xici/Objects/Pokemon.h" "Pokemon Xici/Objects/Objects.h")
+    "src/Texture/AnimatedSprite.cpp"
+    "src/Texture/AnimatedSprite.hpp"
+    "src/Texture/Animation.cpp"
+    "src/Texture/Animation.hpp"
+    "src/Texture/XSprite.cpp"
+    "src/Texture/XSprite.h"
+    "src/main.cpp"
+    "src/TypeWriter.cpp"
+    "src/TypeWriter.h"
+    "src/XBattle.cpp"
+    "src/XBattle.h"
+    "src/XEngine.cpp"
+    "src/XEngine.h"
+    "src/XMap.cpp"
+    "src/XMap.h"
+    "src/XPlayer.cpp"
+    "src/XPlayer.h"
+    "src/Interfaces/States.h" "src/Objects/Pokemon.cpp" "src/Objects/Pokemon.h" "src/Objects/Objects.h")
 
 add_executable(Pokemon_Xici ${SOURCE_FILES})
