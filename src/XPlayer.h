@@ -38,9 +38,7 @@ public:
 
 	void Input(float deltaTime) override;
 
-	sf::Vector2f GetAbsolutePosition();
-
-	sf::Vector2f vCurrentPos;
+	sf::Vector2f GetRelativePosition();
 
 private:
 	// Animation relevant
@@ -55,7 +53,7 @@ private:
 
 	sf::View m_pPlayerView;
 	float fNextSpot;
-	sf::Vector2f vPosition, vStartPos;
+	sf::Vector2f vPosition, vStartPos, vCurrentPos;
 };
 
 #endif
