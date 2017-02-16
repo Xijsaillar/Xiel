@@ -27,7 +27,7 @@ public:
 public:
 	bool LoadTileSet(std::string szFile, int scale, int idx);
 
-	bool LoadTexture(std::string szFile, int idx);
+	bool LoadTexture(std::string szFile, int idx, bool= false);
 
 	bool LoadPokemon();
 
@@ -35,8 +35,11 @@ public:
 
 	sf::Sprite *GetSprite(int idx);
 
+	sf::Texture *GetTexture(int idx);
+
 private:
 	std::unordered_map<int, sf::Sprite> m_pSprites;
 	std::unordered_map<int, sf::Texture> m_pTextures;
+	std::unordered_map<int, sf::Texture> m_pAnimations;
 };
 

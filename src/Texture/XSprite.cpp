@@ -61,10 +61,15 @@ bool XSprite::LoadPokemon() {
 	return true;
 }
 
-bool XSprite::LoadTexture(std::string szFile, int idx) {
+bool XSprite::LoadTexture(std::string szFile, int idx, bool bIsAnimation) {
 	sf::Texture texture;
 	if (!texture.loadFromFile(szFile))
 		return false;
+
+	if (bIsAnimation) {
+		m_pAnimations[idx] = texture;
+		return true;
+	}
 
 	m_pTextures[idx] = texture;
 
@@ -77,4 +82,8 @@ bool XSprite::LoadTexture(std::string szFile, int idx) {
 
 sf::Sprite *XSprite::GetSprite(int idx) {
 	return &m_pSprites[idx];
+}
+
+sf::Texture *XSprite::GetTexture(int idx) {
+	return &m_pAnimations[idx];
 }
