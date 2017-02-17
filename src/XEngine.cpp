@@ -4,6 +4,12 @@
 bool XEngine::Init() {
 	videoSize = sf::Vector2u{512, 384};
 	window = new sf::RenderWindow{{videoSize.x, videoSize.y}, "Xici"};
+	window->setFramerateLimit(30);
+
+	// Init script
+	if (!g_XLua.Init()) {
+		return false;
+	}
 
 	if (!m_pFont.loadFromFile("data/pkmnfl.ttf"))
 		return false;

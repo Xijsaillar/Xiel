@@ -14,6 +14,8 @@
 #include "States.h"
 #include "TypeWriter.h"
 
+#include "XLua.h"
+
 using namespace Interfaces;
 
 class XEngine {
