@@ -3,9 +3,17 @@
 //
 
 #include "XLua.h"
+#include <iostream>
 
 bool XLua::Init() {
-	/* initialize Lua */
-	m_lState = luaL_newstate();
-	return !(luaL_loadfile(m_lState, "data/script/main.lua") || lua_pcall(m_lState, 0, 0, 0));
+
+	try {
+		m_lLua.script_file("data/script/main.lua");
+		std::string t = m_lLua["on_init"]();
+		std::cout << t;
+	} catch (sol::error err) {
+		std::cerr << err.what() << std::endl;
+		return false;
+	}
+	return true;
 }

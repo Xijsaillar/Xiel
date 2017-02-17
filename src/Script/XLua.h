@@ -6,8 +6,8 @@
 #define POKEMON_XICI_XLUA_H
 
 #include <string>
-#include <lua5.2/lua.hpp>
 #include <memory>
+#include "sol.hpp"
 
 class XLua {
 public:
@@ -26,10 +26,8 @@ public:
 
 	bool Init();
 
-	void Execute(std::string, ...);
-
 private:
-	lua_State *m_lState;
+	sol::state m_lLua;
 };
 
 #define g_XLua XLua::GetInstance()
