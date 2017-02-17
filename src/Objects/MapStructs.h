@@ -5,7 +5,7 @@
 #ifndef POKEMON_XICI_MAPSTRUCTS_H
 #define POKEMON_XICI_MAPSTRUCTS_H
 
-#define VERSION2_MAP
+#define VERSION 3
 
 #include <SFML/Graphics.hpp>
 
@@ -17,22 +17,24 @@ typedef struct {
 	int nHeight;
 	int nScale;
 	int nCount;
-#ifdef VERSION2_MAP
-	char md5[32];
+#if VERSION >= 3
+	int nLayer;
 #endif
+	char md5[16];
 } XMapHeader;
 
 typedef struct {
 	int nTileID;
 	int nCollisionLayer;
-#ifndef VERSION2_MAP
-	int EventID;
-#endif
 } XTile;
 #pragma pack(pop)
 
 typedef struct {
+#if VERSION >= 3
+	std::vector<sf::Sprite> tileSprite;
+#else
 	sf::Sprite tileSprite;
+#endif
 	XTile xTile;
 	sf::Vector2i vBasePosition;
 } XMapTile;

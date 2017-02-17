@@ -30,8 +30,14 @@ bool XEngine::Init() {
 
 	// Init the other classes
 	m_pMap->Init();
-	m_pMap->LoadMapFromFile("data/xiel_test.prmp", 0, 0);
-	m_pMap->LoadMapFromFile("data/xiel_test.prmp", 640, 0);
+	m_pMap->LoadMapFromFile("data/map.xmap", 0, 0);
+	m_pMap->LoadMapFromFile("data/map.xmap", 640, 0);
+	m_pMap->LoadMapFromFile("data/map.xmap", 640, 640);
+	m_pMap->LoadMapFromFile("data/map.xmap", 0, 640);
+
+	m_pMap->LoadMapFromFile("data/map.xmap", -640, 0);
+	m_pMap->LoadMapFromFile("data/map.xmap", -640, -640);
+	m_pMap->LoadMapFromFile("data/map.xmap", 0, -640);
 	m_pPlayer->Init({videoSize.x / 2.0f, videoSize.y / 2.0f}, window->getDefaultView());
 	m_pPlayer->SetRelativePosition({-4, 0});
 

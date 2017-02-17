@@ -1,6 +1,7 @@
 #include "XMap.h"
 #include <fstream>
 #include <math.h>
+#include <Objects/MapStructs.h>
 #include "XEngine.h"
 
 // TODO
@@ -14,10 +15,10 @@
  */
 bool XMap::Init() {
 	// Load the animation textures
-	if (!this->LoadAnimationTiles())
-		return false;
+/*	if (!this->LoadAnimationTiles())
+		return false;*/
 	// Load the default tileset we're using
-	return tileset.loadFromFile("data/tileset_firered.png");
+	return tileset.loadFromFile("data/dawn.png");
 }
 
 /**
@@ -89,11 +90,21 @@ void XMap::Render(sf::RenderWindow *window, sf::Vector2f position) {
 					window->draw(m_vAnimations[m_vMap[p]->xTile.nTileID]->tileSprite);
 
 				} else {
+#if VERSION >= 3
+					for (auto &it : m_vMap[p]->tileSprite) {
+						// set the position of the current tile
+						it.setPosition(m_vMap[p]->vBasePosition.x + position.x,
+									   m_vMap[p]->vBasePosition.y + position.y);
+						// Draw the actual tileSprite
+						window->draw(it);
+					}
+#else
 					// set the position of the current tile
 					m_vMap[p]->tileSprite.setPosition(m_vMap[p]->vBasePosition.x + position.x,
 													  m_vMap[p]->vBasePosition.y + position.y);
 					// Draw the actual tileSprite
 					window->draw(m_vMap[p]->tileSprite);
+#endif
 				}
 			}
 		}
@@ -207,46 +218,62 @@ bool XMap::LoadMapFromFile(std::string filename, int nOffsetX = 0, int nOffsetY 
 	// TODO
 	// No pure C reading here
 	finMap.read((char *) &mapHeader, sizeof(XMapHeader));
+#if VERSION >= 3
+	for (int loop = 0; loop < mapHeader.nLayer; loop++) {
+#endif
+		int x = 0, y = 0;
+		// Read X tiles and proceed them
+		for (int i = 0; i < mapHeader.nCount; i++) {
 
-	int x = 0, y = 0;
-	// Read X tiles and proceed them
-	for (int i = 0; i < mapHeader.nCount; i++) {
+			// Declare variables
+			XTile tile;
+			sf::Sprite tilesprite;
+			XMapTile t;
 
-		// Declare variables
-		XTile tile;
-		sf::Sprite tilesprite;
-		XMapTile t;
+			// Read Tile struct
+			finMap.read((char *) &tile, sizeof(XTile));
 
-		// Read Tile struct
-		finMap.read((char *) &tile, sizeof(XTile));
+			// Get the Coordinates in the tileset from the Tile ID
+			auto vector = CoordinateFromID(tileset.getSize().x / mapHeader.nScale, tile.nTileID);
 
-		// Get the Coordinates in the tileset from the Tile ID
-		auto vector = CoordinateFromID(tileset.getSize().x / mapHeader.nScale, tile.nTileID);
+			// Set the tileTexture of the tileSprite
+			tilesprite.setTexture(tileset);
+			tilesprite.setTextureRect({vector.x * mapHeader.nScale,
+									   vector.y * mapHeader.nScale,
+									   mapHeader.nScale,
+									   mapHeader.nScale});
+			// Set the base position of the tileSprite
+			tilesprite.setPosition(x + nOffsetX, y + nOffsetY);
+			t.vBasePosition = {x + nOffsetX, y + nOffsetY};
+			// Assign variables to the XMapTile
+			t.xTile = tile;
+#if VERSION >= 3
+			t.tileSprite.push_back(tilesprite);
+#else
+			t.tileSprite = tilesprite;
+#endif
 
-		// Set the tileTexture of the tileSprite
-		tilesprite.setTexture(tileset);
-		tilesprite.setTextureRect({vector.x * mapHeader.nScale,
-								   vector.y * mapHeader.nScale,
-								   mapHeader.nScale,
-								   mapHeader.nScale});
-		// Set the base position of the tileSprite
-		tilesprite.setPosition(x + nOffsetX, y + nOffsetY);
-		t.vBasePosition = {x + nOffsetX, y + nOffsetY};
-		// Assign variables to the XMapTile
-		t.xTile = tile;
-		t.tileSprite = tilesprite;
-
-		// And add it to our unordered_map
-		m_vMap[{x + nOffsetX, y + nOffsetY}] = std::make_unique<XMapTile>(t);
-
-		// Manual check to keep the x and y coordinates in range
-		if (x + mapHeader.nScale == mapHeader.nWidth * mapHeader.nScale) {
-			y += mapHeader.nScale;
-			x = 0;
-		} else {
-			x += mapHeader.nScale;
+#if VERSION >= 3
+			// And add it to our unordered_map
+			if (loop == 0) {
+				m_vMap[{x + nOffsetX, y + nOffsetY}] = std::make_unique<XMapTile>(t);
+			} else {
+				m_vMap[{x + nOffsetX, y + nOffsetY}]->tileSprite.push_back(tilesprite);
+			}
+#else
+			m_vMap[{x + nOffsetX, y + nOffsetY}] = std::make_unique<XMapTile>(t);
+#endif
+			// Manual check to keep the x and y coordinates in range
+			if (x + mapHeader.nScale == mapHeader.nWidth * mapHeader.nScale) {
+				y += mapHeader.nScale;
+				x = 0;
+			} else {
+				x += mapHeader.nScale;
+			}
 		}
+#if VERSION >= 3
 	}
+#endif
 
 	// Add the width + height of the loaded map to our global map width + height
 	nWidth += mapHeader.nWidth;
