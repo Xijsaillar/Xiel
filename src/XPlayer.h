@@ -3,24 +3,18 @@
 #define  _XPLAYER_H_
 
 #include <SFML/Graphics.hpp>
+#include "Objects/Characters.h"
 #include "Texture/AnimatedSprite.hpp"
 #include "Interfaces/States.h"
 
 #define TILESIZE 16
 
-enum ENUM_DIRECTION {
-	UP, DOWN, LEFT, RIGHT
-};
-constexpr float fWalkSpeed = 0.25f;
-constexpr float fRunSpeed = 0.2f;
-constexpr int nMoveSpeed = 40;
-
 
 class XEngine;
 
-class XPlayer : public Interfaces::States {
+class XPlayer : public Interfaces::States, public Objects::Characters {
 public:
-	XPlayer() : nDirection(DOWN), isMoving(false), isRunning(false) {};
+	XPlayer() {};
 
 	~XPlayer() {};
 
@@ -41,19 +35,7 @@ public:
 	sf::Vector2f GetRelativePosition();
 
 private:
-	// Animation relevant
-	AnimatedSprite animatedSprite;
-	Animation walkingAnimation[8];
-	Animation *currentAnimation;
-	sf::Texture texture;
-	// Moving relevant
-	bool isRunning;
-	bool isMoving;
-	ENUM_DIRECTION nDirection;
-
 	sf::View m_pPlayerView;
-	float fNextSpot;
-	sf::Vector2f vPosition, vStartPos, vCurrentPos;
 };
 
 #endif

@@ -26,7 +26,11 @@ namespace Textures {
 
 	class XAnimation {
 	public:
-		XAnimation(sf::Texture, sf::Vector2i);
+		XAnimation() {}
+
+		XAnimation(sf::Texture, sf::Vector2f);
+
+		~XAnimation() {};
 
 		void SetBaseFrame(BaseFrame);
 		void AddFrame(int idx, std::vector<sf::IntRect>);
@@ -34,13 +38,27 @@ namespace Textures {
 		void AddFrame(int idx,int u,int d,int l,int r) { AddFrame(idx, {u, d, l, r}); }
 		void SetCurrentFrame(int);
 
+		void SetTexture(sf::Texture, sf::Vector2f);
+
+		void Update(sf::Time);
+
+		void InitPlay(std::vector<int>, sf::Time);
+
+		void Stop() { m_bIsPlaying = false; }
+
 		sf::Sprite* GetSprite() { return &m_sfSprite; }
 	private:
 		sf::Texture m_sfTexture;
 		sf::Sprite m_sfSprite;
+
 		std::unordered_map<int,sf::IntRect> m_vFrames;
+		std::vector<int> m_vAniFrames;
+
 		int nCurrentFrame{0};
+		bool m_bIsPlaying{false};
 		BaseFrame m_bBaseFrame;
+
+		sf::Time m_sfCurrentTime, m_sfFrameTime;
 
 	};
 }

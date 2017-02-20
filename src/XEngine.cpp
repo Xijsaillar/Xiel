@@ -26,6 +26,9 @@ bool XEngine::Init() {
 	if (!window)
 		return false;
 
+	std::unique_ptr<XNPC> npc{new XNPC(sf::Vector2f(5, 2))};
+	m_vNPC.push_back(std::move(npc));
+
 	m_pSprites.LoadTexture("data/textskin.png", MENU_FRAME);
 
 	// Init the other classes
@@ -102,8 +105,10 @@ void XEngine::WindowEvents() {
 			if (evt.key.code == sf::Keyboard::P) {
 				std::cout << "Currently at absolute " << m_pPlayer->GetRelativePosition().x << "X : "
 						  << m_pPlayer->GetRelativePosition().y << "Y" << std::endl;
+				m_vNPC[0]->Move(Objects::DOWN);
 			}
 			if (evt.key.code == sf::Keyboard::D) {
+				m_vNPC[0]->SetPosition({5, 1});
 				m_pMap->SetDebug();
 			}
 		}

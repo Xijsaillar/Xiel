@@ -10,31 +10,35 @@
 // Parameter: sf::Vector2f pos
 //************************************
 //
+
 void XPlayer::Init(sf::Vector2f pos, sf::View pView) {
+
 	m_pPlayerView = pView;
 	m_pPlayerView.zoom(0.5);
-	if (!texture.loadFromFile("data/player_male.png")) {
+	if (!m_sfTexture.loadFromFile("data/player_male.png")) {
 		throw "Could not load player tileSprite!";
 	}
 
 	for (int i = 0; i < 4; ++i) {
-		walkingAnimation[i].setSpriteSheet(texture);
+		walkingAnimation[i].setSpriteSheet(m_sfTexture);
 		walkingAnimation[i].addFrame(sf::IntRect(16, i * 20, 16, 20));
 		walkingAnimation[i].addFrame(sf::IntRect(0, i * 20, 16, 20));
 		walkingAnimation[i].addFrame(sf::IntRect(16, i * 20, 16, 20));
 		walkingAnimation[i].addFrame(sf::IntRect(32, i * 20, 16, 20));
+
 	}
 	for (int i = 4, y = 0; i < 8; ++i, ++y) {
-		walkingAnimation[i].setSpriteSheet(texture);
+		walkingAnimation[i].setSpriteSheet(m_sfTexture);
 		walkingAnimation[i].addFrame(sf::IntRect(64, y * 20, 16, 20));
 		walkingAnimation[i].addFrame(sf::IntRect(48, y * 20, 16, 20));
 		walkingAnimation[i].addFrame(sf::IntRect(64, y * 20, 16, 20));
 		walkingAnimation[i].addFrame(sf::IntRect(80, y * 20, 16, 20));
 	}
 
-	currentAnimation = &walkingAnimation[DOWN];
+	currentAnimation = &walkingAnimation[Objects::DOWN];
 	animatedSprite = AnimatedSprite(sf::seconds(fWalkSpeed), true, false);
 	animatedSprite.setPosition(pos);
+
 	vPosition = vStartPos = vCurrentPos = pos;
 	vPosition.y += 4;
 	vCurrentPos.y += 4;
@@ -56,7 +60,7 @@ sf::Vector2f XPlayer::GetRelativePosition() {
 void XPlayer::Render(sf::RenderWindow *renderWindow, float deltaTime) {
 
 	renderWindow->setView(m_pPlayerView);
-	XEngine::GetInstance().GetXMap()->Render(renderWindow, vPosition);
+	XEngine::GetInstance().GetXMap()->Render(renderWindow, vPosition, deltaTime);
 
 	renderWindow->draw(animatedSprite);
 	animatedSprite.play(*currentAnimation);
@@ -83,94 +87,19 @@ void XPlayer::Input(float deltaTime) {
 
 	if (!isMoving) {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-			fNextSpot = vPosition.y + TILESIZE;
-			nDirection = UP;
-			currentAnimation = &walkingAnimation[isRunning ? UP + 4 : UP];
-			if (g_XEngine.GetXMap()->isCollision(
-					{(int) (vStartPos.x - vPosition.x), (int) (vStartPos.y + 4 - fNextSpot)})) {
-				return;
-			}
-			isMoving = true;
+			Move(Objects::UP);
 		} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-			fNextSpot = vPosition.y - TILESIZE;
-			nDirection = DOWN;
-			currentAnimation = &walkingAnimation[isRunning ? DOWN + 4 : DOWN];
-			if (g_XEngine.GetXMap()->isCollision(
-					{(int) (vStartPos.x - vPosition.x), (int) (vStartPos.y + 4 - fNextSpot)})) {
-				return;
-			}
-			isMoving = true;
+			Move(Objects::DOWN);
 		} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-			fNextSpot = vPosition.x + TILESIZE;
-			nDirection = LEFT;
-			currentAnimation = &walkingAnimation[isRunning ? LEFT + 4 : LEFT];
-			if (g_XEngine.GetXMap()->isCollision(
-					{(int) (vStartPos.x - fNextSpot), (int) (vStartPos.y + 4 - vPosition.y)})) {
-				return;
-			}
-			isMoving = true;
+			Move(Objects::LEFT);
 		} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-			fNextSpot = vPosition.x - TILESIZE;
-			nDirection = RIGHT;
-			currentAnimation = &walkingAnimation[isRunning ? RIGHT + 4 : RIGHT];
-			if (g_XEngine.GetXMap()->isCollision(
-					{(int) (vStartPos.x - fNextSpot), (int) (vStartPos.y + 4 - vPosition.y)})) {
-				return;
-			}
-			isMoving = true;
+			Move(Objects::RIGHT);
 		}
-	}
-
-	// Do the actual movement
-	if (isMoving) {
-		switch (nDirection) {
-			case UP: {
-				vPosition.y += nMoveSpeed * (isRunning ? 2 : 1) * deltaTime;
-				if (vPosition.y >= fNextSpot) {
-					vPosition.y = fNextSpot;
-					vCurrentPos = vPosition;
-					isMoving = false;
-					isRunning = false;
-				}
-			}
-				break;
-			case DOWN:
-				vPosition.y -= nMoveSpeed * (isRunning ? 2 : 1) * deltaTime;
-				if (vPosition.y <= fNextSpot) {
-					vPosition.y = fNextSpot;
-					vCurrentPos = vPosition;
-					isMoving = false;
-					isRunning = false;
-				}
-				break;
-			case LEFT:
-				vPosition.x += nMoveSpeed * (isRunning ? 2 : 1) * deltaTime;
-				if (vPosition.x >= fNextSpot) {
-					vPosition.x = fNextSpot;
-					vCurrentPos = vPosition;
-					isMoving = false;
-					isRunning = false;
-				}
-				break;
-			case RIGHT:
-				vPosition.x -= nMoveSpeed * (isRunning ? 2 : 1) * deltaTime;
-				if (vPosition.x <= fNextSpot) {
-					vPosition.x = fNextSpot;
-					vCurrentPos = vPosition;
-					isMoving = false;
-					isRunning = false;
-				}
-				break;
-			default:
-				break;
-		}
-	} else {
-		isRunning = false;
-		currentAnimation = &walkingAnimation[nDirection];
-		animatedSprite.stop();
 	}
 }
 
 void XPlayer::Update(float deltaTime) {
-	g_XEngine.GetXMap()->Update();
+	// Do the actual movement
+	UpdateCharacter(deltaTime);
+	g_XEngine.GetXMap()->Update(deltaTime);
 }

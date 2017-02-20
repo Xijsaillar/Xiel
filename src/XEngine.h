@@ -15,6 +15,7 @@
 #include "TypeWriter.h"
 
 #include "XLua.h"
+#include "XNPC.h"
 
 using namespace Interfaces;
 
@@ -47,6 +48,7 @@ public:
 
 	Typewriter *GetTypewriter() { return &m_pWriter; }
 
+	std::vector<std::unique_ptr<XNPC>> m_vNPC;
 private:
 	//SFML Render Window
 	sf::RenderWindow *window;

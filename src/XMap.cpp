@@ -25,7 +25,21 @@ bool XMap::Init() {
  * XMap::Update
  * Update the tile animations
  */
-void XMap::Update() {
+void XMap::Update(float deltaTime) {
+
+	sf::Vector2f pos = g_XEngine.GetPlayer()->GetRelativePosition();
+	// Loop through x and y, 192 being half the size of the viewport
+	for (int y = -192; y < 192; y += 16) {
+		for (int x = -192; x < 192; x += 16) {
+
+			// Add the current x/y value to the relative position
+			sf::Vector2i p{(int) pos.x + x, (int) pos.y + y};
+			if (m_vNPC.count(p) == 1) {
+
+				g_XEngine.m_vNPC[m_vNPC[p]]->UpdateCharacter(deltaTime);
+			}
+		}
+	}
 
 	// Get our own deltaTime
 	float elapsed = clock.getElapsedTime().asSeconds();
@@ -59,7 +73,7 @@ void XMap::Update() {
  * @param window - the Render Window
  * @param position - the players position, needed to calculate the actual position for drawing
  */
-void XMap::Render(sf::RenderWindow *window, sf::Vector2f position) {
+void XMap::Render(sf::RenderWindow *window, sf::Vector2f position, float deltaTime) {
 
 	// Get the elapsed time as seconds (deltaTime)
 	float elapsed = clock.getElapsedTime().asSeconds();
@@ -106,6 +120,9 @@ void XMap::Render(sf::RenderWindow *window, sf::Vector2f position) {
 					window->draw(m_vMap[p]->tileSprite);
 #endif
 				}
+			}
+			if (m_vNPC.count(p) == 1) {
+				g_XEngine.m_vNPC[m_vNPC[p]]->Render(window, deltaTime, {position.x, position.y - 4});
 			}
 		}
 	}
@@ -258,6 +275,9 @@ bool XMap::LoadMapFromFile(std::string filename, int nOffsetX = 0, int nOffsetY 
 			if (loop == 0) {
 				m_vMap[{x + nOffsetX, y + nOffsetY}] = std::make_unique<XMapTile>(t);
 			} else {
+				if (t.xTile.nTileID != -1)
+					m_vMap[{x + nOffsetX, y + nOffsetY}]->xTile.nCollisionLayer = t.xTile.nCollisionLayer;
+
 				m_vMap[{x + nOffsetX, y + nOffsetY}]->tileSprite.push_back(tilesprite);
 			}
 #else

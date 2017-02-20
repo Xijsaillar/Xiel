@@ -30,12 +30,15 @@ public:
 
 	bool isCollision(sf::Vector2i);
 
-	void Update();
-	void Render(sf::RenderWindow *window, sf::Vector2f position);
+	void Update(float);
+
+	void Render(sf::RenderWindow *window, sf::Vector2f position, float deltaTime);
 
 	int CoordinateToID(int width, int x, int y);
 	sf::Vector2i CoordinateFromID(int width, int index);
 
+	// vector being the current position the NPC is at and int the NPC id
+	std::unordered_map<sf::Vector2i, int, KeyHasher> m_vNPC;
 private:
 	bool LoadAnimationTiles();
 	void DrawGrid(sf::RenderWindow *);
