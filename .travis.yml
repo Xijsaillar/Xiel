@@ -1,8 +1,11 @@
 language: cpp
 
 compiler:
-  - clang
+  - clang++
   - g++
+
+install:
+  - sudo apt-get install libsfml-dev=2.0
 
 before_script:
   - mkdir build
