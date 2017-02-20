@@ -5,7 +5,7 @@ compiler:
   - g++
 
 install:
-  - sudo apt-get install libsfml-dev=2.0
+  - sudo apt-get install libsfml-dev
 
 before_script:
   - mkdir build
