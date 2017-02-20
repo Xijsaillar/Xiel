@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 2.8.7)
 add_definitions(-std=c++14)
 
 # No deprecated warnings
-add_compile_options(-Wno-deprecated-declarations)
+# add_compile_options(-Wno-deprecated-declarations)
 
 # set macro-directory
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/macros")
